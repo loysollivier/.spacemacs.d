@@ -1,0 +1,18 @@
+
+* Expansion style
+See a downward pointing arrow instead of the usual
+(=...=) that org displays when there's stuff under the header.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-ellipsis "⤵")
+#+END_SRC
+
+* `TODO` states
+From [[https://orgmode.org/manual/Tracking-TODO-state-changes.html][ORG mode doc]], change the TODO states to:
+`TODO`, `WAIT`, `DONE`, `CANCELED`
+With some nifty timestamps.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+  '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+#+END_SRC

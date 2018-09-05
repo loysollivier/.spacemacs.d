@@ -369,3 +369,4 @@ you should place your code here."
 (add-hook 'shell-mode-hook 'set-no-process-query-on-exit)
 (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
+(org-babel-load-file "~/.spacemacs.d/configuration.org")
