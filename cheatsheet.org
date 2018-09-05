@@ -1,0 +1,122 @@
+** Spacemacs
+*** Help
+- =SPC ?= Find a command and it's binding
+- =SPC SPC= Enter a command with completion
+
+*** Browsing
+
+- =SPC a d= open home folder and browse (dired)
+- =SPC p p= switch project
+- =SPC p f= find file in directory (recursive) (helm-projectile-find-file)
+- =SPC f f= find file in directory (navigate) (helm-find-files)
+- =SPC f L= locate file (helm-locate)
+- =SPC s p= search for file's content
+- =SPC /= Find string in project (helm-projectile-grep)
+- =SPC s s= search for string in file - awesome (helm-swoop)
+- =find-name-dired= find file in repo
+
+*** Search
+
+- =/text= like vim
+  - =n= for next
+  - =N= for previous
+- =SPC /= Enter helm-ag buffer - awesome grep like in dired or file
+  - =C-c C-e= Edit all occurence
+- =#= While in normal mode: symbol highlight text !
+
+*** Edit
+
+- =C /= Undo
+- =C ?= Redo
+- =d= Cut
+- =C-x h= Select all buffer
+- =SPC a u= Undo tree
+- =D= delete from cursor to end of line
+- =d w= delete next word
+- =d C-<-= delete previous word
+- Editor mode
+  - =M w= Copy (M = alt)
+  - =C r "= paste
+  - =M m k p= paste (will take you out of editor mode)
+- Multi cursor
+  - =SPC s e= iedit state
+  - =SPC SPC turn-on-evil-mc-mode=
+  - =C n= Create new cursor
+  - =C t= Skip creation
+  - =grp= Delete last cursor
+  - =gru= Exit mutli-cursor
+- Moving lines
+  - =[e= - Move line up
+  - =]e= - Move line down
+  - =[SPACE= - Insert space above
+  - =]SPACE= - Insert space below
+  - =[p= - Paste above current line
+  - =]p= - Paste below current line
+  - =.= repeat last command (keep moving)
+- Cursor move in buffer
+  - =Shift g= Go to bottom of file
+  - =g g= Go to top of file
+  - =j= - =k= Go up - down one line
+  - =w= - =b= Go to next - prev word
+  - =] ]= - =[ [= Go to next - prev function definition
+
+*** Coding style
+
+- =SPC t f= - Right margin line indicator
+
+*** Shell
+
+- =C-u M-x shell= New shell session
+
+*** Magit
+
+- =SPC g b= git blame
+- =SPC g s= git status
+
+  - =?= Help for possible action
+
+*** Create files
+
+- =SPC f f= Write file name -> Enter
+
+*** Keyboard
+
+- =setxkbmap -layout us -option ctrl:nocaps= disable capslock and make
+  it a control key
+
+*** Dired
+
+- =a= Go to dir in the same buffer
+- =^= Go up one directory
+- =d= mark to delete
+- =x= execute all commands
+
+*** Spacemacs config
+
+- =SPC f e d= open spacemacs dotfile
+- =SPC f e R= reload spacemacs dotfile
+
+** Emacs black magic
+
+- =C x k= Kill buffer
+- =C x C b= Show all buffers
+- =C x <-= Go to prev buffer
+- =C x 4 0= Delete buffer and window
+- =C h v= describe variable
+- =C-h w command-name= find key bindings for command
+- =C-h k key-sequence= find command from key binding - [[https://stackoverflow.com/questions/965263/given-an-emacs-command-name-how-would-you-find-key-bindings-and-vice-versa][Source]]
+- =C h m= see bindings for file
+
+** Org
+
+- =C c C v= or =t= Toggle TODO (org-todo)
+- =C RET= Create same level bullet
+- =C S RET= Create a TODO bullet below
+** Todo
+*** File indexing and searching
+**** TODO grep
+**** TODO find
+*** Look at org files
+**** DONE Migrate this sheet to an org file
+     CLOSED: [2018-09-05 Wed 11:55]
+     - State "DONE"       from "TODO"       [2018-09-05 Wed 11:55]
