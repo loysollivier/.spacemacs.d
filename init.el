@@ -329,6 +329,9 @@ you should place your code here."
 
   ;; Terminal - Jump to end of buffer disabled
   (setq comint-move-point-for-output nil)
+
+  ;; Org related configuration
+  (org-babel-load-file "~/.spacemacs.d/configuration.org")
  )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -369,4 +372,3 @@ you should place your code here."
 (add-hook 'shell-mode-hook 'set-no-process-query-on-exit)
 (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
-(org-babel-load-file "~/.spacemacs.d/configuration.org")
