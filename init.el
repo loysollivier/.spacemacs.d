@@ -43,21 +43,19 @@ values."
      javascript
      markdown
      org
-     pdf-tools
+     pdf
      python
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom)
-     ;; spell-checking
-     ;; syntax-checking
+     shell
      version-control
+     yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-				      dtrt-indent)
+				      dtrt-indent
+				      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -313,12 +311,6 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; shell / comint mode
-  ;; interpret and use ansi color codes in shell output windows
-  (ansi-color-for-comint-mode-on)
-
-  ;; Shell add compilation-shell-minor-mode as a minor mode
-  (add-hook 'comint-mode-hook 'compilation-shell-minor-mode)
 
   ;; default indentation
   (setq c-default-style '((c-mode . "linux") (other . "gnu")))
@@ -326,9 +318,6 @@ you should place your code here."
   ;; Insert tabs on indent + tab width
   (setq-default indent-tabs-mode t
 	      tab-width 8)
-
-  ;; Terminal - Jump to end of buffer disabled
-  (setq comint-move-point-for-output nil)
 
   ;; Org related configuration
   (org-babel-load-file "~/.spacemacs.d/configuration.org")
