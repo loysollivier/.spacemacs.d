@@ -31,6 +31,12 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     (mu4e :variables
+     	   mu4e-installation-path "/usr/local/share/emacs/site-lisp/mu4e/"
+	   ;; Use the maildirs extension - needs to be set here
+	   mu4e-use-maildirs-extension t)
+     ;; spell-checking
+     ;; syntax-checking
      auto-completion
      better-defaults
      c-c++
@@ -129,6 +135,16 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light)
+
+   ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
+   ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
+   ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
+   ;; `vanilla' is default Emacs mode-line. `custom' is a user defined themes,
+   ;; refer to the DOCUMENTATION.org for more info on how to create your own
+   ;; spaceline theme. Value can be a symbol or list with additional properties.
+   ;; (default '(spacemacs :separator wave :separator-scale 1.5))
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -311,53 +327,11 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; User config encapsulated in org
+  (setq my-config-file "~/.spacemacs.d/user-config.org")
+  (org-babel-load-file "~/.spacemacs.d/user-config.org")
 
-  ;; default indentation
-  (setq c-default-style '((c-mode . "linux") (other . "gnu")))
-
-  ;; Insert tabs on indent + tab width
-  (setq-default indent-tabs-mode t
-	      tab-width 8)
-
-  ;; Org related configuration
-  (org-babel-load-file "~/.spacemacs.d/configuration.org")
- )
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(comint-completion-addsuffix t)
- '(comint-completion-autolist t)
- '(comint-input-ignoredups t)
- '(comint-scroll-to-bottom-on-input t)
- '(magit-commit-arguments nil)
- '(package-selected-packages
-   (quote
-    (json-snatcher json-reformat parent-mode pkg-info epl request haml-mode fringe-helper git-gutter+ git-gutter flx iedit anzu goto-chg web-completion-data dash-functional tern bind-map auto-complete popup f disaster company-c-headers cmake-mode clang-format csv-mode dtrt-indent powerline multiple-cursors projectile bind-key packed anaconda-mode avy smartparens highlight evil yasnippet company xcscope gitignore-mode helm helm-core skewer-mode js2-mode simple-httpd magit magit-popup git-commit ghub with-editor markdown-mode async org-plus-contrib hydra pythonic s dash pdf-tools tablist org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot yapfify xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tagedit spaceline smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode json-mode js2-refactor js-doc indent-guide hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl define-word cython-mode company-web company-tern company-statistics company-anaconda column-enforce-mode coffee-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-;; When pressing "^" in dired move up one directory in same buffer
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (define-key dired-mode-map (kbd "^")
-              (lambda () (interactive)(find-alternate-file "..")))))
-
-;; Terminal - Don't ask for confirmation to kill buffer
-(defun set-no-process-query-on-exit ()
-  (let ((proc (get-buffer-process (current-buffer))))
-    (when (processp proc)
-      (set-process-query-on-exit-flag proc nil))))
-
-(add-hook 'shell-mode-hook 'set-no-process-query-on-exit)
-(add-hook 'term-exec-hook 'set-no-process-query-on-exit)
-

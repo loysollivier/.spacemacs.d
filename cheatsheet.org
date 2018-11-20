@@ -6,11 +6,13 @@
     - =SPC a d= open home folder and browse (dired)
     - =SPC p p= switch project
     - =SPC p f= find file in directory (recursive) (helm-projectile-find-file)
+    - =SPC p F= find file at point (recursive) (helm-projectile-find-file-dwim)
     - =SPC f f= find file in directory (navigate) (helm-find-files)
     - =SPC f L= locate file (helm-locate)
     - =SPC s p= search for file's content
     - =SPC /= Find string in project (helm-projectile-grep)
     - =SPC s s= search for string in file - awesome (helm-swoop)
+    - =SPC s S= search for string at point in file (helm-swoop)
     - =find-name-dired= find file in repo
 *** Search
     - =/text= like vim
@@ -19,6 +21,7 @@
     - =SPC /= Enter helm-ag buffer - awesome grep like in dired or file
       - =C-c C-e= Edit all occurence
     - =#= While in normal mode: symbol highlight text !
+    - Globally: =SPC s a f= helm-do-ag
 *** Edit
     - =C /= Undo
     - =C ?= Redo

@@ -1,0 +1,173 @@
+* Spacemacs config
+  Most of my config is kept in org.
+  Add a shortcut to editing this file.
+  Needs "my-config-file" to be set in init.el
+#+BEGIN_SRC emacs-lisp
+  (defun spacemacs/find-user-config-file ()
+    "Edit the org configuration, in the current window."
+    (interactive)
+    (find-file-existing my-config-file))
+
+  (spacemacs/set-leader-keys
+    "fef" 'spacemacs/find-user-config-file
+    )
+#+END_SRC
+
+  Create a rgrep with defaults looking in "all" files recursively in current directory
+  TODO improve this by using C-u for overriding the files (i.e. look in all, including .git,...)
+#+BEGIN_SRC emacs-lisp
+  ;;(add-to-list 'grep-find-ignored-directories ".git")
+  (defun my-rgrep-find ()
+    (interactive)
+    (grep-compute-defaults)
+    (let ((regexp (grep-read-regexp))
+	  (files "* .[!.]* ..?*")
+	  (dir default-directory))
+      (rgrep regexp files dir)))
+
+  (spacemacs/set-leader-keys
+    "fG" 'my-rgrep-find
+    )
+#+END_SRC
+
+Make the scratch buffer an org buffer, handy for scratching
+#+BEGIN_SRC emacs-lisp
+  (setq dotspacemacs-scratch-mode 'org-mode)
+#+END_SRC
+
+* Coding style
+Set default indent to "linux"
+And insert tabs on indent + set tab width
+#+BEGIN_SRC emacs-lisp
+  (setq c-default-style '((c-mode . "linux") (other . "gnu")))
+
+  (setq-default indent-tabs-mode t
+                tab-width 8)
+#+END_SRC
+* Magit
+Default signoff my commits
+#+BEGIN_SRC emacs-lisp
+  ;;(setq magit-commit-arguments (quote ("--signoff")))
+#+END_SRC
+* Diff-mode
+** Whitespace-mode
+Disable whitespace mode, otherwise my eyes are bleeding
+
+#+BEGIN_SRC emacs-lisp
+  (remove-hook 'diff-mode-hook 'whitespace-mode)
+#+END_SRC
+ 
+* Shell
+Set default shell to =shell=
+#+BEGIN_SRC emacs-lisp
+  (setq shell-default-shell 'shell)
+  (setq shell-default-position 'bottom)
+#+END_SRC
+
+Terminal - Don't ask for confirmation to kill buffer
+#+BEGIN_SRC emacs-lisp
+  (defun set-no-process-query-on-exit ()
+    (let ((proc (get-buffer-process (current-buffer))))
+      (when (processp proc)
+  	(set-process-query-on-exit-flag proc nil))))
+
+  (add-hook 'shell-mode-hook 'set-no-process-query-on-exit)
+  (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  ;; interpret and use ansi color codes in shell output windows
+  (ansi-color-for-comint-mode-on)
+
+  ;; Shell add compilation-shell-minor-mode as a minor mode
+  ;; (add-hook 'comint-mode-hook 'compilation-shell-minor-mode)
+
+  ;; Terminal - Jump to end of buffer disabled
+  (setq comint-move-point-for-output nil)
+
+  ;; Do not override the PS1 prompt colors in shell mode
+  (add-hook 'shell-mode-hook
+	(lambda ()
+	  (set-face-attribute 'comint-highlight-prompt nil
+	  :inherit nil)))
+#+END_SRC
+
+Replace Helm completion-at-point by company completion
+Bind it to TAB in shell mode
+Add the company-capf backend to shell mode
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'shell-mode-hook 'company-mode)
+  (define-key shell-mode-map (kbd "TAB") #'company-manual-begin)
+  (spacemacs|add-company-backends :backends company-capf :modes shell-mode)
+#+END_SRC
+
+Better bash completion
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.spacemacs.d/layers/")
+  (require 'bash-completion)
+  (bash-completion-setup)
+#+END_SRC
+
+* Org mode
+Hard line wrap at 90 chars, looks good on most on my displays, half screen
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
+  (add-hook 'org-mode-hook (lambda () (setq fill-column 90)))
+#+END_SRC
+
+[[https://orgmode.org/manual/Clean-view.html][Cleaner outline view]] - auto indent under outlines
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'org-indent-mode)
+#+END_SRC
+
+If a org heading contains the tag =:newpage:= then automatically insert a clearpage when
+exporting to LaTeX/PDF
+- TODO improve it, make it mandatory for highest headings
+- TODO fix it does not work on startup, needs to require probably
+#+BEGIN_SRC emacs-lisp
+  (defun org/get-headline-string-element  (headline backend info)
+    (let ((prop-point (next-property-change 0 headline)))
+      (if prop-point (plist-get (text-properties-at prop-point headline) :parent))))
+
+  (defun org/ensure-latex-clearpage (headline backend info)
+    (when (org-export-derived-backend-p backend 'latex)
+      (let ((elmnt (org/get-headline-string-element headline backend info)))
+        (when (member "newpage" (org-element-property :tags elmnt))
+          (concat "\\clearpage\n" headline)))))
+
+;;  (add-to-list 'org-export-filter-headline-functions
+;;               'org/ensure-latex-clearpage)
+#+END_SRC
+
+** Expansion style
+ See a downward pointing arrow instead of the usual
+ (=...=) that org displays when there's stuff under the header.
+
+#+BEGIN_SRC emacs-lisp
+   (setq org-ellipsis "⤵")
+#+END_SRC
+
+** =TODO= states
+ From [[https://orgmode.org/manual/Tracking-TODO-state-changes.html][ORG mode doc]], change the TODO states to:
+ `TODO`, `WAIT`, `DONE`, `CANCELED`
+ With some nifty timestamps.
+
+ #+BEGIN_SRC emacs-lisp
+ (setq org-todo-keywords
+   '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+ #+END_SRC
+* Python
+  Set the Python interpreter to Python3
+  Anacomda-mode is not happy if Python2 is not installed
+#+BEGIN_SRC emacs-lisp
+  (setq python-shell-interpreter "/usr/bin/python3")
+#+END_SRC
+* Dired
+When pressing "^" in dired move up one directory in same buffer
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'dired-mode-hook
+  	    (lambda ()
+  	      (define-key dired-mode-map (kbd "^")
+  		(lambda () (interactive)(find-alternate-file "..")))))
+#+END_SRC
