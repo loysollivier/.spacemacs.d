@@ -1,0 +1,5 @@
+#+OPTIONS: num:t toc:t \n:nil ::t |:t ^:t f:t tex:t tags:nil
+#+LATEX_HEADER: \addtolength{\textwidth}{40mm}
+#+LATEX_HEADER: \addtolength{\hoffset}{-20mm}
+#+LATEX_HEADER: \addtolength{\voffset}{-20mm}
+#+LATEX_HEADER: \setlength\parindent{0pt}
