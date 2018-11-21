@@ -136,8 +136,9 @@ exporting to LaTeX/PDF
         (when (member "newpage" (org-element-property :tags elmnt))
           (concat "\\clearpage\n" headline)))))
 
-;;  (add-to-list 'org-export-filter-headline-functions
-;;               'org/ensure-latex-clearpage)
+  (require 'ox)
+  (add-to-list 'org-export-filter-headline-functions
+               'org/ensure-latex-clearpage)
 #+END_SRC
 
 ** Expansion style
