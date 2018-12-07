@@ -141,6 +141,15 @@ exporting to LaTeX/PDF
                  'org/ensure-latex-clearpage))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'evil-insert-state-entry-hook (lambda ()
+                                            (when (not (display-graphic-p))
+                                               (send-string-to-terminal "\033[5 q"))))
+  (add-hook 'evil-normal-state-entry-hook (lambda ()
+                                            (when (not (display-graphic-p))
+                                               (send-string-to-terminal "\033[0 q"))))
+#+END_SRC
+
 ** Expansion style
  See a downward pointing arrow instead of the usual
  (=...=) that org displays when there's stuff under the header.
