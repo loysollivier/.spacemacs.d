@@ -47,8 +47,21 @@ And insert tabs on indent + set tab width
 * Magit
 Default signoff my commits
 #+BEGIN_SRC emacs-lisp
-  ;;(setq magit-commit-arguments (quote ("--signoff")))
+  (setq magit-commit-arguments (quote ("--signoff")))
 #+END_SRC
+
+Change the behavior of the log to make it actually usable
+#+BEGIN_SRC emacs-lisp
+  (setq magit-log-arguments (remove "--graph" magit-log-arguments))
+  (setq magit-log-arguments (remove "-n256" magit-log-arguments))
+  (add-to-list 'magit-log-arguments '"-n64" )
+#+END_SRC
+
+Set line wrapping at 75 columns as suggested by the linux kernel
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 75)))
+#+END_SRC
+
 * Diff-mode
 ** Whitespace-mode
 Disable whitespace mode, otherwise my eyes are bleeding
