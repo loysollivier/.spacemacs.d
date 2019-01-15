@@ -62,6 +62,19 @@ Set line wrapping at 75 columns as suggested by the linux kernel
   (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 75)))
 #+END_SRC
 
+Custom binding to log only from HEAD to first-tag
+#+BEGIN_SRC emacs-lisp
+  (defun magit-log-from-head-to-last-tag (&optional args files)
+    "Show log from `HEAD' to last Tag found."
+    (interactive (magit-log-arguments))
+    (let ((last-tag (magit-git-string "describe" "--abbrev=0" "--tags")))
+      (when last-tag
+        (magit-log (list (format "%s..HEAD" last-tag)) args files))))
+
+  (magit-define-popup-action 'magit-log-popup
+    ?t "Log from HEAD to last Tag" 'magit-log-from-head-to-last-tag)
+#+END_SRC
+
 * Diff-mode
 ** Whitespace-mode
 Disable whitespace mode, otherwise my eyes are bleeding
