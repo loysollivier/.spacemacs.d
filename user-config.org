@@ -199,6 +199,12 @@ exporting to LaTeX/PDF
 #+BEGIN_SRC emacs-lisp
   (setq python-shell-interpreter "/usr/bin/python3")
 #+END_SRC
+
+Turn on fill-column-indicator by default for Python
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'python-mode-hook 'fci-mode)
+#+END_SRC
+
 * Dired
 When pressing "^" in dired move up one directory in same buffer
 #+BEGIN_SRC emacs-lisp
