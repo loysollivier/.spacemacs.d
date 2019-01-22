@@ -114,9 +114,9 @@ Terminal - Don't ask for confirmation to kill buffer
 
   ;; Do not override the PS1 prompt colors in shell mode
   (add-hook 'shell-mode-hook
-	(lambda ()
-	  (set-face-attribute 'comint-highlight-prompt nil
-	  :inherit nil)))
+            (lambda ()
+              (set-face-attribute 'comint-highlight-prompt nil
+                                  :inherit nil)))
 #+END_SRC
 
 Replace Helm completion-at-point by company completion
