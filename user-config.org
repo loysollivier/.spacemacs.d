@@ -138,7 +138,7 @@ Replace Helm completion-at-point by company completion
 Bind it to TAB in shell mode
 Add the company-capf backend to shell mode
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'shell-mode-hook 'company-mode)
+  ;; (add-hook 'shell-mode-hook 'company-mode)
   (define-key shell-mode-map (kbd "TAB") #'company-manual-begin)
   (spacemacs|add-company-backends :backends company-capf :modes shell-mode)
 #+END_SRC
