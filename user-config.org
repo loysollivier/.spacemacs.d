@@ -107,7 +107,7 @@ Terminal - Don't ask for confirmation to kill buffer
   (ansi-color-for-comint-mode-on)
 
   ;; Shell add compilation-shell-minor-mode as a minor mode
-  ;; (add-hook 'comint-mode-hook 'compilation-shell-minor-mode)
+  (add-hook 'comint-mode-hook 'compilation-shell-minor-mode)
 
   ;; Terminal - Jump to end of buffer disabled
   (setq comint-move-point-for-output nil)
