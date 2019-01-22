@@ -117,6 +117,21 @@ Terminal - Don't ask for confirmation to kill buffer
             (lambda ()
               (set-face-attribute 'comint-highlight-prompt nil
                                   :inherit nil)))
+
+  ;; When pressing RET don't send input but go to latest prompt
+  (defun my-comint-send-input-maybe ()
+    "Only `comint-send-input' when point is after the latest prompt.
+
+  Otherwise move to the end of the buffer."
+    (interactive)
+    (let ((proc (get-buffer-process (current-buffer))))
+      (if (and proc (>= (point) (marker-position (process-mark proc))))
+          (comint-send-input)
+        (goto-char (point-max)))))
+
+  (with-eval-after-load "comint"
+    (define-key shell-mode-map [remap comint-send-input] 'my-comint-send-input-maybe))
+
 #+END_SRC
 
 Replace Helm completion-at-point by company completion
