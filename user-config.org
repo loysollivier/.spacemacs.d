@@ -243,3 +243,15 @@ And only use secondary select methods for news and stuff.
           (nntp "nntp.lore.kernel.org")
           ))
 #+END_SRC
+* projectile
+Started playing around with projectile.
+Flow for working on a new project is the following:
+- SPC p p - helm-projectile-switch-project
+- SPC p e - projectile-edit-dir-locals
+  - Set vars: projectile-project-compilation-cmd (and others projectile-porject-*)
+- SPC p c - projectile-compile-project (might need a reload of =.dir-loacls.el= - use dired for this)
+
+Fix when calling compilation on a project where it has not been set yet.
+#+BEGIN_SRC emacs-lisp
+  (setq projectile-project-compilation-cmd "")
+#+END_SRC
