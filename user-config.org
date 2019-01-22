@@ -150,6 +150,12 @@ Better bash completion
   (bash-completion-setup)
 #+END_SRC
 
+Use Emacs as the default editor for shell (module owned by magit)
+#+BEGIN_SRC emacs-lisp
+  (require 'with-editor)
+  (add-hook 'shell-mode-hook 'with-editor-export-editor)
+#+END_SRC
+
 * Org mode
 Hard line wrap at 90 chars, looks good on most on my displays, half screen
 #+BEGIN_SRC emacs-lisp
