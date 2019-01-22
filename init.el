@@ -44,6 +44,7 @@ values."
      csv
      emacs-lisp
      git
+     gnus
      helm
      html
      javascript

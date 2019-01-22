@@ -234,3 +234,12 @@ When pressing "^" in dired move up one directory in same buffer
   	      (define-key dired-mode-map (kbd "^")
   		(lambda () (interactive)(find-alternate-file "..")))))
 #+END_SRC
+* gnus
+Apparently it's best to leave the primary select method nil
+And only use secondary select methods for news and stuff.
+#+BEGIN_SRC emacs-lisp
+  (setq gnus-secondary-select-methods
+        '(
+          (nntp "nntp.lore.kernel.org")
+          ))
+#+END_SRC
