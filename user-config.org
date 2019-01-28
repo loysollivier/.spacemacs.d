@@ -199,6 +199,12 @@ exporting to LaTeX/PDF
                  'org/ensure-latex-clearpage))
 #+END_SRC
 
+purpose-mode which is a minor mode required by spacemacs
+is messing with =org-insert-structure-template=.
+Disable it when in org-mode
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook (lambda () (purpose-mode -1)))
+#+end_src
 
 ** Expansion style
  See a downward pointing arrow instead of the usual
