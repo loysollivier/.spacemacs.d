@@ -235,6 +235,14 @@ Turn on fill-column-indicator by default for Python
   (add-hook 'python-mode-hook 'fci-mode)
 #+END_SRC
 
+Flycheck setup (needs syntax-checking layer)
+To toggle flycheck ON-OFF use =SPC t s= (OFF by default)
+#+begin_src emacs-lisp
+  (setq flycheck-python-pycompile-executable "/usr/bin/python3")
+  (setq flycheck-python-flake8-executable "/usr/bin/python3")
+  (setq flycheck-python-pylint-executable "/usr/bin/python3")
+#+end_src
+
 * Dired
 When pressing "^" in dired move up one directory in same buffer
 #+BEGIN_SRC emacs-lisp

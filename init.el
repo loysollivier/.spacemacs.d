@@ -53,6 +53,9 @@ values."
      pdf
      python
      shell
+     (syntax-checking :variables
+		      syntax-checking-enable-tooltips nil
+		      syntax-checking-enable-by-default nil)
      version-control
      yaml
      )
