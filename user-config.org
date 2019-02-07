@@ -93,6 +93,24 @@ Custom binding to log only from HEAD to first-tag
     ?t "Log from HEAD to last Tag" 'magit-log-from-head-to-last-tag)
 #+END_SRC
 
+Custom binding to copy the commit at point in oneline form
+#+begin_src emacs-lisp
+  (defun magit-copy-commit-at-point (&optional args files)
+    "Copy the commit or HEAD at point to the kill-ring"
+    (interactive)
+    (let ((oneline-commit (magit-git-string
+                           "log" "-n1" "--pretty=oneline" "--abbrev-commit"
+                           (magit-branch-or-commit-at-point))))
+      (when oneline-commit
+        (kill-new oneline-commit)
+        (message oneline-commit))
+    )
+   )
+
+  (spacemacs/set-leader-keys
+    "gy" 'magit-copy-commit-at-point
+    )
+#+end_src
 * Diff-mode
 ** Whitespace-mode
 Disable whitespace mode, otherwise my eyes are bleeding
