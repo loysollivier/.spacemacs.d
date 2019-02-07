@@ -21,9 +21,11 @@
     (interactive)
     (grep-compute-defaults)
     (let ((regexp (grep-read-regexp))
-	  (files "* .[!.]* ..?*")
-	  (dir default-directory))
-      (rgrep regexp files dir)))
+          (files "* .[!.]* ..?*")
+          (dir default-directory))
+      (rgrep regexp files dir))
+    (switch-to-buffer-other-window "*grep*")
+    )
 
   (spacemacs/set-leader-keys
     "fG" 'my-rgrep-find
