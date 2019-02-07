@@ -37,6 +37,7 @@ Make the scratch buffer an org buffer, handy for scratching
   (setq dotspacemacs-scratch-mode 'org-mode)
 #+END_SRC
 
+* evil
 Send escape sequence when using emacs/spacemacs not in graphic mode.
 So that the prompt can change from block to line.
 #+BEGIN_SRC emacs-lisp
@@ -48,6 +49,10 @@ So that the prompt can change from block to line.
                                                (send-string-to-terminal "\033[0 q"))))
 #+END_SRC
 
+Surround stuff:
+- [[https://github.com/syl20bnr/spacemacs/issues/7996][How do I surround a visual selection?]]
+- https://github.com/emacs-evil/evil-surround
+- https://www.reddit.com/r/emacs/comments/4531i9/how_to_efficiently_insert_quotes_parens_or/
 * Coding style
 Set default indent to "linux"
 And insert tabs on indent + set tab width
