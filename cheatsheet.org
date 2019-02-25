@@ -4,24 +4,28 @@
     - =SPC SPC= Enter a command with completion
 *** Browsing
     - =SPC a d= open home folder and browse (dired)
+      - [[Dired][Then Dired bindings]]
     - =SPC p p= switch project
+    - =SPC s p= search for file's content
+    - =find-name-dired= find file in repo
+*** Search
+**** Files
     - =SPC p f= find file in directory (recursive) (helm-projectile-find-file)
     - =SPC p F= find file at point (recursive) (helm-projectile-find-file-dwim)
     - =SPC f f= find file in directory (navigate) (helm-find-files)
     - =SPC f L= locate file (helm-locate)
-    - =SPC s p= search for file's content
-    - =SPC /= Find string in project (helm-projectile-grep)
-    - =SPC s s= search for string in file - awesome (helm-swoop)
-    - =SPC s S= search for string at point in file (helm-swoop)
-    - =find-name-dired= find file in repo
-*** Search
-    - =/text= like vim
+**** Text
+***** In buffer
+    - =/regex= like vim
       - =n= for next
       - =N= for previous
-    - =SPC /= Enter helm-ag buffer - awesome grep like in dired or file
+    - =*= While in evil normal state: auto-highlight-symbol forward
+***** In project
+    - =SPC s s= search for string in file - awesome (helm-swoop)
+    - =SPC s S= search for string at point in file (helm-swoop)
+    - =SPC /= Find string in project (helm-projectile-grep)
       - =C-c C-e= Edit all occurence
-    - =#= While in normal mode: symbol highlight text !
-    - Globally: =SPC s a f= helm-do-ag
+    - =SPC s a f= helm-do-ag
 *** Edit
     - =C /= Undo
     - =C ?= Redo
@@ -60,14 +64,18 @@
       - =C M %= query-replace-regexp to replace something, also works on region
 *** Coding style
     - =SPC t f= - Right margin line indicator
+    - =toggle-truncate-lines= Wrap lines at the size of the buffer
 *** Shell
     - =C-u M-x shell= New shell session
+    - =SPC '= Spacemacs shell
 *** Magit
     - =SPC g b= git blame
     - =SPC g s= git status
       - =?= Help for possible action
-*** Create files
+*** Files/Buffers
     - =SPC f f= Write file name -> Enter
+    - =C-x C-w= Save as (ido-write-file)
+    - =C-x C-s= Save file
 *** Keyboard
     - =setxkbmap -option ctrl:nocaps= disable capslock and make it a control key
 *** Dired
@@ -75,6 +83,9 @@
     - =^= Go up one directory
     - =d= mark to delete
     - =x= execute all commands
+    - =+= create folder
+    - =R= rename/move file
+    - =Z= zip/unzip file
 *** Spacemacs config
     - =SPC f e d= open spacemacs dotfile
     - =SPC f e R= reload spacemacs dotfile
@@ -93,7 +104,6 @@
    - =C c C v= or =t= Toggle TODO (org-todo)
    - =C RET= Create same level bullet
    - =C S RET= Create a TODO bullet below
-   - =toggle-truncate-lines= Wrap lines at the size of the buffer
 ** Mail
    - =C j= mu4e next message (in MSGV)
    - =C k= mu4e previous message (in MSGV)
