@@ -1,0 +1,8 @@
+This is my Spacemacs configuration.
+
+* Installation
+** Install [[http://spacemacs.org/][Spacemacs]]
+=git clone -b develop https://github.com/syl20bnr/spacemacs ~/.emacs.d=
+
+** Clone this repo
+=git clone --recurse-submodules https://github.com/loysollivier/.spacemacs.d ~/.spacemacs.d=
