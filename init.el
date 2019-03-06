@@ -49,6 +49,7 @@ values."
      html
      javascript
      markdown
+     notmuch
      org
      pdf
      python
@@ -336,7 +337,7 @@ you should place your code here."
   ;; User config encapsulated in org
   (setq my-config-file "~/.spacemacs.d/user-config.org")
   (org-babel-load-file "~/.spacemacs.d/user-config.org")
-
+  (org-babel-load-file "~/.spacemacs.d/mail-config.org")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

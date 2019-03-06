@@ -1,0 +1,126 @@
+* Emacs mail
+User-related mail info
+#+BEGIN_SRC emacs-lisp
+  (setq user-mail-address "lollivier@baylibre.com")
+
+  (setq message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp"
+        user-full-name "Loys Ollivier")
+
+  ;; don't keep message buffers around
+  (setq message-kill-buffer-on-exit t)
+#+END_SRC
+
+Do Gmail style citation when replying to mails
+#+BEGIN_SRC emacs-lisp
+  (setq message-citation-line-format "On %a %d %b %Y at %R, %f wrote:\n")
+  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+#+END_SRC
+
+* Notmuch
+Thanks [[https://github.com/JulienMasson/jm-config][JulienMasson]] for customizing your config for me :D
+Create a notmuch-hello page with a list of tags along with
+(unread/total) count of mails.
+#+begin_src emacs-lisp
+  (require 'notmuch)
+
+  (defcustom notmuch-custom-queries-alist nil
+    "Name . query"
+    :type '(alist :key-type (string) :value-type (string))
+    :group 'notmuch-tree)
+
+  (defface notmuch-custom-header-face
+    '((t :inherit font-lock-type-face :bold t))
+    "Face for a header in hello section."
+    :group 'notmuch-faces)
+
+  (defface notmuch-custom-unread-face
+    '((t :inherit font-lock-keyword-face :bold t))
+    "Face when we have unread messages."
+    :group 'notmuch-faces)
+
+  (defface notmuch-custom-normal-face
+    '((t :inherit default))
+    "Face when we don't have unread messages."
+    :group 'notmuch-faces)
+
+  (defun notmuch-custom-count-query (query)
+    (with-temp-buffer
+      (insert query "\n")
+      (unless (= (call-process-region (point-min) (point-max) notmuch-command
+                      t t nil "count" "--batch") 0)
+        (notmuch-logged-error "notmuch count --batch failed"))
+      (goto-char (point-min))
+      (read (current-buffer))))
+
+  (defun notmuch-custom-insert (query-alist)
+    (let* ((name (car query-alist))
+        (query (cdr query-alist))
+        (total (notmuch-custom-count-query query))
+        (unread (notmuch-custom-count-query
+            (concat query " and tag:unread")))
+        (widget-push-button-prefix "")
+        (widget-push-button-suffix ""))
+      (widget-insert "      ")
+      (widget-create 'push-button
+              :notify #'notmuch-hello-widget-search
+              :notmuch-search-terms query
+              :notmuch-search-oldest-first 'newest-first
+              :notmuch-search-type 'tree
+              (format "%-15s" name))
+      (widget-insert (propertize
+              (format "(%s/%s)\n" unread total)
+              'face (if (> unread 0)
+                    'notmuch-custom-unread-face
+                  'notmuch-custom-normal-face)))))
+
+  (defun notmuch-insert-custom-header ()
+    (widget-insert "\n")
+    (widget-insert (propertize "  Baylibre <lollivier@baylibre.com>\n\n" 'face 'notmuch-custom-header-face)))
+
+  (defun notmuch-custom-hello-section ()
+    (notmuch-insert-custom-header)
+    (mapc #'notmuch-custom-insert notmuch-custom-queries-alist))
+
+  (setq notmuch-hello-sections (list #'notmuch-custom-hello-section))
+
+  (setq notmuch-custom-queries-alist '(("Inbox" . "tag:inbox")
+                                       ("Amlogic" . "tag:Mailing-lists/linux-kernel/Amlogic")
+                                       ("Needs Review" . "tag:1_needs-review")
+                                       ("Replied" . "tag:replied")))
+#+end_src
+
+Edit the FCC folder where notmuch will try to store the sent mails.
+#+begin_src emacs-lisp
+  (setq notmuch-fcc-dirs nil)
+#+end_src
+
+Custom tagging keys
+#+begin_src emacs-lisp
+(setq notmuch-tagging-keys
+  `((,(kbd "a") notmuch-archive-tags "Archive")
+    (,(kbd "u") notmuch-show-mark-read-tags "Mark read")
+    (,(kbd "f") ("+flagged") "Flag")
+    (,(kbd "r") ("-1_needs-review") "Reviewed")
+    (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
+    (,(kbd "d") ("+trash" "-inbox") "Delete")))
+#+end_src
+
+Modify fonts
+#+begin_src emacs-lisp
+  (face-spec-set
+   'notmuch-tree-match-date-face
+   '((t (:inherit font-lock-keyword-face)))
+   'face-defface-spec)
+
+  (face-spec-set
+   'notmuch-tree-match-author-face
+   '((t (:inherit font-lock-type-face)))
+   'face-defface-spec)
+
+  (face-spec-set
+   'notmuch-tree-match-tag-face
+   '((t (:inherit font-lock-base-face)))
+   'face-defface-spec)
+#+end_src
+
