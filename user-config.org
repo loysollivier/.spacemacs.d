@@ -181,7 +181,7 @@ Add the company-capf backend to shell mode
 
 Better bash completion
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.spacemacs.d/layers/")
+  (add-to-list 'load-path "~/.spacemacs.d/layers/emacs-bash-completion")
   (require 'bash-completion)
   (bash-completion-setup)
 #+END_SRC
