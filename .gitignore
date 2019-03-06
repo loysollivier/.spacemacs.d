@@ -1,2 +1,4 @@
+.spacemacs.env
 configuration.el
 user-config.el
+mail-config.el
