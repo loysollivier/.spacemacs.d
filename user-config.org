@@ -102,8 +102,7 @@ Custom binding to copy the commit at point in oneline form
                            "log" "-n1" "--pretty=oneline" "--abbrev-commit"
                            (magit-branch-or-commit-at-point))))
       (when oneline-commit
-        (kill-new oneline-commit)
-        (message oneline-commit))
+        (message "%s" (kill-new oneline-commit)))
     )
    )
 
