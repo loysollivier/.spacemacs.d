@@ -335,9 +335,10 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; User config encapsulated in org
-  (setq my-config-file "~/.spacemacs.d/user-config.org")
-  (org-babel-load-file "~/.spacemacs.d/user-config.org")
-  (org-babel-load-file "~/.spacemacs.d/mail-config.org")
+  (setq my-user-config-file "~/.spacemacs.d/user-config.org")
+  (org-babel-load-file my-user-config-file)
+  (setq my-mail-config-file "~/.spacemacs.d/mail-config.org")
+  (org-babel-load-file my-mail-config-file)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

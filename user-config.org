@@ -1,15 +1,21 @@
 * Spacemacs config
   Most of my config is kept in org.
   Add a shortcut to editing this file.
-  Needs "my-config-file" to be set in init.el
+  Needs "my-user-config-file" and "my-mail-config-file" to be set in init.el
 #+BEGIN_SRC emacs-lisp
   (defun spacemacs/find-user-config-file ()
     "Edit the org configuration, in the current window."
     (interactive)
-    (find-file-existing my-config-file))
+    (find-file-existing my-user-config-file))
+
+  (defun spacemacs/find-mail-config-file ()
+    "Edit the org configuration, in the current window."
+    (interactive)
+    (find-file-existing my-mail-config-file))
 
   (spacemacs/set-leader-keys
     "fef" 'spacemacs/find-user-config-file
+    "fem" 'spacemacs/find-mail-config-file
     )
 #+END_SRC
 
