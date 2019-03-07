@@ -44,30 +44,49 @@ Create a notmuch-hello page with a list of tags along with
     "Face when we don't have unread messages."
     :group 'notmuch-faces)
 
-  (defun notmuch-custom-count-query (query)
-    (with-temp-buffer
-      (insert query "\n")
-      (unless (= (call-process-region (point-min) (point-max) notmuch-command
-                      t t nil "count" "--batch") 0)
-        (notmuch-logged-error "notmuch count --batch failed"))
-      (goto-char (point-min))
-      (read (current-buffer))))
+  (defun notmuch-custom-plist (queries-alist)
+    (let (total-list unread-list data)
+      (with-temp-buffer
+	;; insert queries
+	(mapc (lambda (query)
+		(let* ((query-cmd (cdr query))
+		       (query-cmd-unread (concat query-cmd " and tag:unread")))
+		  (insert query-cmd "\n")
+		  (insert query-cmd-unread "\n")))
+	      queries-alist)
+	;; run queries
+	(unless (= (call-process-region (point-min) (point-max) notmuch-command
+					t t nil "count" "--batch") 0)
+	  (notmuch-logged-error "notmuch count --batch failed"))
+	;; parse results
+	(goto-char (point-min))
+	(while (not (eobp))
+	  (push (string-to-number (buffer-substring (point) (point-at-eol)))
+		total-list)
+	  (forward-line 1)
+	  (push (string-to-number (buffer-substring (point) (point-at-eol)))
+		unread-list)
+	  (forward-line 1)))
+      ;; set read/unread
+      (cl-mapc (lambda (query total unread)
+		 (add-to-list 'data `(:label ,(car query) :query ,(cdr query) :unread ,unread :total ,total) t))
+	       queries-alist (nreverse total-list) (nreverse unread-list))
+      data))
 
-  (defun notmuch-custom-insert (query-alist)
-    (let* ((name (car query-alist))
-        (query (cdr query-alist))
-        (total (notmuch-custom-count-query query))
-        (unread (notmuch-custom-count-query
-            (concat query " and tag:unread")))
-        (widget-push-button-prefix "")
-        (widget-push-button-suffix ""))
+  (defun notmuch-custom-insert (data)
+    (let* ((label (plist-get data :label))
+	   (query (plist-get data :query))
+	   (unread (plist-get data :unread))
+	   (total (plist-get data :total))
+	   (widget-push-button-prefix "")
+	   (widget-push-button-suffix ""))
       (widget-insert "      ")
       (widget-create 'push-button
               :notify #'notmuch-hello-widget-search
               :notmuch-search-terms query
               :notmuch-search-oldest-first 'newest-first
               :notmuch-search-type 'tree
-              (format "%-15s" name))
+	      (format "%-15s" label))
       (widget-insert (propertize
               (format "(%s/%s)\n" unread total)
               'face (if (> unread 0)
@@ -79,8 +98,9 @@ Create a notmuch-hello page with a list of tags along with
     (widget-insert (propertize "  Baylibre <lollivier@baylibre.com>\n\n" 'face 'notmuch-custom-header-face)))
 
   (defun notmuch-custom-hello-section ()
-    (notmuch-insert-custom-header)
-    (mapc #'notmuch-custom-insert notmuch-custom-queries-alist))
+    (let ((data (notmuch-custom-plist notmuch-custom-queries-alist)))
+      (notmuch-insert-custom-header)
+      (mapc #'notmuch-custom-insert data)))
 
   (setq notmuch-hello-sections (list #'notmuch-custom-hello-section))
 
