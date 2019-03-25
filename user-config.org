@@ -331,3 +331,27 @@ Kill current buffer and go to other window.
 
   (global-set-key (kbd "C-x O") 'my-kill-this-buffer-go-to-other-window)
 #+end_src
+* ag
+#+begin_src emacs-lisp
+  (require 'ag)
+#+end_src
+Enable highlighting because it's nice
+Reuse the =*ag search*= buffer instead of creating new ones.
+#+begin_src emacs-lisp
+  (setq ag-highlight-search t)
+  (setq ag-reuse-buffers t)
+#+end_src
+
+Search for string in default-directory (current-path)
+and switch to this buffer on result
+  #+begin_src emacs-lisp
+    (defun my-ag (string)
+      (interactive (list (ag/read-from-minibuffer "Search string")))
+      (message default-directory)
+      (ag string default-directory)
+      (switch-to-buffer-other-window "*ag search*"))
+
+    (spacemacs/set-leader-keys
+      "saG" 'my-ag
+      )
+  #+end_src
