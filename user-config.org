@@ -315,3 +315,19 @@ Delete a word when using =C-<backspace>= instead of killing it (copy to kill-rin
   (global-set-key (kbd "C-<backspace>") 'backward-delete-word)
 #+end_src
 
+Why this does not exist by default ?
+Maybe my flow is broken ?
+Kill current buffer and go to other window.
+#+begin_src emacs-lisp
+    (defun my-kill-this-buffer-go-to-other-window()
+      (interactive)
+      (kill-this-buffer)
+      (other-window 1)
+    )
+
+    (spacemacs/set-leader-keys
+      "bk" 'my-kill-this-buffer-go-to-other-window
+      )
+
+  (global-set-key (kbd "C-x O") 'my-kill-this-buffer-go-to-other-window)
+#+end_src
