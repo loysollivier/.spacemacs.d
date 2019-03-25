@@ -63,10 +63,10 @@ Surround stuff:
 Set default indent to "linux"
 And insert tabs on indent + set tab width
 #+BEGIN_SRC emacs-lisp
-  (setq c-default-style '((c-mode . "linux") (other . "gnu")))
-
-  (setq-default indent-tabs-mode t
-                tab-width 8)
+  (setq-default tab-width 8)
+  (add-hook 'c-mode-common-hook 'dtrt-indent-mode)
+  (add-hook 'python-mode-hook 'dtrt-indent-mode)
+  (spacemacs|diminish dtrt-indent-mode " ⓓ" " d")
 #+END_SRC
 * Magit
 Default signoff my commits
