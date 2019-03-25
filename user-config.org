@@ -331,6 +331,11 @@ Kill current buffer and go to other window.
 
   (global-set-key (kbd "C-x O") 'my-kill-this-buffer-go-to-other-window)
 #+end_src
+* Deft
+#+begin_src emacs-lisp
+  (setq deft-directory "~/Dropbox/Notes")
+  (setq deft-recursive t)
+#+end_src
 * ag
 #+begin_src emacs-lisp
   (require 'ag)

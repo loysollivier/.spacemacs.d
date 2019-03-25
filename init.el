@@ -42,18 +42,23 @@ values."
      c-c++
      cscope
      csv
+     ;; Deft is an Emacs mode for quickly browsing, filtering, and editing
+     ;; directories of plain text notes.
+     deft
      emacs-lisp
      git
      gnus
      helm
      html
      javascript
+     latex
      markdown
      notmuch
      org
      pdf
      python
      shell
+     spell-checking
      (syntax-checking :variables
 		      syntax-checking-enable-tooltips nil
 		      syntax-checking-enable-by-default nil)
