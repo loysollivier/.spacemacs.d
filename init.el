@@ -341,9 +341,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; User config encapsulated in org
-  (setq my-user-config-file (concatenate 'string dotspacemacs-directory "/user-config.org"))
+  (setq my-user-config-file (concat dotspacemacs-directory "/user-config.org"))
   (org-babel-load-file my-user-config-file)
-  (setq my-mail-config-file (concatenate 'string dotspacemacs-directory "/mail-config.org"))
+  (setq my-mail-config-file (concat dotspacemacs-directory "/mail-config.org"))
   (org-babel-load-file my-mail-config-file)
   )
 
