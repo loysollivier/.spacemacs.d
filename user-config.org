@@ -71,7 +71,7 @@ And insert tabs on indent + set tab width
 * Magit
 Default signoff my commits
 #+BEGIN_SRC emacs-lisp
-  (setq magit-commit-arguments (quote ("--signoff")))
+  (setq transient-values-file (concatenate 'string dotspacemacs-directory "/transient/values.el"))
 #+END_SRC
 
 Change the behavior of the log to make it actually usable
