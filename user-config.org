@@ -302,6 +302,13 @@ Fix when calling compilation on a project where it has not been set yet.
 #+BEGIN_SRC emacs-lisp
   (setq projectile-project-compilation-cmd "")
 #+END_SRC
+
+Switch to the compilation buffer on compilation
+#+begin_src emacs-lisp
+  (defun switch-to-comp (arg)
+      (switch-to-buffer-other-window "*compilation*"))
+  (advice-add 'projectile-compile-project :after #'switch-to-comp)
+#+end_src
 * Emacs
 
 Delete a word when using =C-<backspace>= instead of killing it (copy to kill-ring)
