@@ -18,12 +18,21 @@ Do Gmail style citation when replying to mails
 #+END_SRC
 
 * Notmuch
+There's notmuch to say
+#+begin_src emacs-lisp
+  (require 'notmuch)
+#+end_src
+
+Disable evilification for notmuch
+#+begin_src emacs-lisp
+  (dolist (mode notmuch-modes)
+    (evil-set-initial-state mode 'emacs))
+#+end_src
+
 Thanks [[https://github.com/JulienMasson/jm-config][JulienMasson]] for customizing your config for me :D
 Create a notmuch-hello page with a list of tags along with
 (unread/total) count of mails.
 #+begin_src emacs-lisp
-  (require 'notmuch)
-
   (defcustom notmuch-custom-queries-alist nil
     "Name . query"
     :type '(alist :key-type (string) :value-type (string))
