@@ -17,6 +17,59 @@ Do Gmail style citation when replying to mails
   (setq message-citation-line-function 'message-insert-formatted-citation-line)
 #+END_SRC
 
+Fontify cited parts of the mail
+#+begin_src emacs-lisp
+  (defface mail-cited-0-face
+    '((t :inherit font-lock-type-face :bold nil :italic t))
+    "Face for cited message parts (level 0)."
+    :group 'faces)
+
+  (defface mail-cited-1-face
+    '((t :inherit font-lock-keyword-face :bold nil :italic t))
+    "Face for cited message parts (level 1)."
+    :group 'faces)
+
+  (defface mail-cited-2-face
+    '((t :inherit font-lock-comment-face :bold nil :italic t))
+    "Face for cited message parts (level 2)."
+    :group 'faces)
+
+  (defface mail-cited-3-face
+    '((t :inherit font-lock-constant-face :bold nil :italic t))
+    "Face for cited message parts (level 3)."
+    :group 'faces)
+
+  (defface mail-cited-4-face
+    '((t :inherit font-lock-type-face :bold nil :italic t))
+    "Face for cited message parts (level 4)."
+    :group 'faces)
+
+  (defface mail-cited-5-face
+    '((t :inherit font-lock-string-face :bold nil :italic t))
+    "Face for cited message parts (level 5)."
+    :group 'faces)
+
+  (defface mail-cited-6-face
+    '((t :inherit font-lock-variable-name-face :bold nil :italic t))
+    "Face for cited message parts (level 6)."
+    :group 'faces)
+
+  (defvar mail-cited-regexp
+    "^\\(\\([[:alpha:]]+\\)\\|\\( *\\)\\)\\(\\(>+ ?\\)+\\)")
+
+  (defun mail-fontify-cited ()
+    (save-excursion
+      (message-goto-body)
+      (while (re-search-forward mail-cited-regexp nil t)
+        (let* ((str (buffer-substring (line-beginning-position)
+                                      (point)))
+               (level (mod (string-width (replace-regexp-in-string "[^>]" "" str)) 7))
+               (face  (unless (zerop level)
+                        (intern-soft (format "mail-cited-%d-face" level)))))
+          (when face
+            (add-text-properties (line-beginning-position)
+                                 (line-end-position) `(face ,face)))))))
+#+end_src
 * Notmuch
 There's notmuch to say
 #+begin_src emacs-lisp
@@ -131,5 +184,31 @@ Modify fonts
    'notmuch-tree-match-tag-face
    '((t (:inherit font-lock-base-face)))
    'face-defface-spec)
+
+  (face-spec-set
+   'message-header-name
+   '((t (:inherit font-lock-keyword-face)))
+   'face-defface-spec)
+  (face-spec-set
+   'message-header-to
+   '((t (:inherit font-lock-function-name-face)))
+   'face-defface-spec)
+  (face-spec-set
+   'message-header-cc
+   '((t (:inherit font-lock-constant-face)))
+   'face-defface-spec)
+#+end_src
+
+Fontify cited parts of the mail
+#+begin_src emacs-lisp
+  (defun apply-mail-fontify-cited (msg depth)
+    (mail-fontify-cited))
+  (advice-add 'notmuch-show-insert-msg :after #'apply-mail-fontify-cited)
+#+end_src
+
+Remove wash citation (collapse of citation lines) from insert text hook
+#+begin_src emacs-lisp
+  (setq notmuch-show-insert-text/plain-hook (remove 'notmuch-wash-excerpt-citations
+  notmuch-show-insert-text/plain-hook))
 #+end_src
 
