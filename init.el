@@ -330,6 +330,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; Auto load last saved layouts
   (setq dotspacemacs-auto-resume-layouts t)
+  ;; Keep same height for org headings and text
+  (setq spacemacs-theme-org-height nil)
   )
 
 (defun dotspacemacs/user-config ()

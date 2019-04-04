@@ -235,7 +235,11 @@ Disable it when in org-mode
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook (lambda () (purpose-mode -1)))
 #+end_src
-
+** org theme
+Greenish org tables are nicer :)
+#+begin_src emacs-lisp
+  (set-face-attribute 'org-table nil :foreground "#008787")
+#+end_src
 ** Expansion style
  See a downward pointing arrow instead of the usual
  (=...=) that org displays when there's stuff under the header.
