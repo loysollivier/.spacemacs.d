@@ -40,6 +40,7 @@ values."
      auto-completion
      better-defaults
      c-c++
+     cmake
      cscope
      csv
      ;; Deft is an Emacs mode for quickly browsing, filtering, and editing
