@@ -428,3 +428,8 @@ and switch to this buffer on result
       "saG" 'my-ag
       )
   #+end_src
+* Secrets
+or actually path and other stuff that people doesn't need to know about
+#+begin_src emacs-lisp
+  (load (concat dotspacemacs-directory "secrets/secrets.el") t)
+#+end_src
