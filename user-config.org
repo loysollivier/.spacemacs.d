@@ -116,6 +116,58 @@ Custom binding to copy the commit at point in oneline form
     "gy" 'magit-copy-commit-at-point
     )
 #+end_src
+
+For big git repositories reduce the information fetched in magit to make magit faster
+#+begin_src emacs-lisp
+  (defvar magit-blacklist-repo '()
+    "list of blacklist repository")
+
+  (defvar magit-blacklist-status-headers-hook
+    (remove 'magit-insert-tags-header magit-status-headers-hook)
+    "Remove tags header from status headers")
+
+  (defvar magit-blacklist-status-sections-hook
+    (seq-filter (lambda (elem)
+                  (not (member elem '(magit-insert-unpushed-to-pushremote
+                                      magit-insert-unpulled-from-pushremote
+                                      magit-insert-unpulled-from-upstream))))
+                magit-status-sections-hook)
+    "Remove unpushed/unpulled from status section")
+
+  (defun magit-blacklist-filter-hook (hook &rest args)
+    (nconc (if (-contains? magit-blacklist-repo (magit-toplevel))
+               (cond ((member 'magit-status-sections-hook hook)
+                      (cl-replace hook '(magit-blacklist-status-sections-hook)))
+                     ((member 'magit-status-headers-hook hook)
+                      (cl-replace hook '(magit-blacklist-status-headers-hook)))
+                     (t hook))
+             hook)
+           args))
+
+  (advice-add 'magit-run-section-hook :filter-args #'magit-blacklist-filter-hook)
+
+  (defun magit-blacklist-insert-revision-headers (old-fn &rest args)
+    (if (-contains? magit-blacklist-repo (magit-toplevel))
+        (let ((magit-revision-insert-related-refs nil))
+          (apply old-fn args))
+      (apply old-fn args)))
+
+  (advice-add 'magit-insert-revision-headers :around #'magit-blacklist-insert-revision-headers)
+
+  (defun magit-blacklist-branch-or-commit-at-point (old-fn &rest args)
+    (if (-contains? magit-blacklist-repo (magit-toplevel))
+        (let ((magit-buffer-refname (magit-section-case
+                                      (commit (oref it value)))))
+          (apply old-fn args))
+      (apply old-fn args)))
+
+  (advice-add 'magit-branch-or-commit-at-point :around #'magit-blacklist-branch-or-commit-at-point)
+#+end_src
+
+List of repos to blacklist this is appended in secrets file
+#+begin_src emacs-lisp
+  (add-to-list 'magit-blacklist-repo "")
+#+end_src
 * Diff-mode
 ** Whitespace-mode
 Disable whitespace mode, otherwise my eyes are bleeding
