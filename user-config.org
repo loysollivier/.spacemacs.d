@@ -366,6 +366,11 @@ Switch to the compilation buffer on compilation
   (advice-add 'projectile-compile-project :after #'switch-to-comp)
 #+end_src
 * Emacs
+Launch server on startup if not already running
+#+begin_src emacs-lisp
+  (load "server")
+  (unless (server-running-p) (server-start))
+#+end_src
 
 Delete a word when using =C-<backspace>= instead of killing it (copy to kill-ring)
 #+begin_src  emacs-lisp
