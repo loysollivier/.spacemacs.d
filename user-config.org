@@ -428,6 +428,18 @@ and switch to this buffer on result
       "saG" 'my-ag
       )
   #+end_src
+* lisp funcs
+Browse url at point with firefox
+#+begin_src emacs-lisp
+  (defun my-browse-url-firefox-at-point()
+    (interactive)
+    (browse-url-firefox (thing-at-point 'url))
+    )
+
+  (spacemacs/set-leader-keys
+    "jU" 'my-browse-url-firefox-at-point
+    )
+#+end_src
 * Secrets
 or actually path and other stuff that people doesn't need to know about
 #+begin_src emacs-lisp
