@@ -1,2 +1,2 @@
 ((magit-commit "--signoff")
- (magit-log "-n64" "--color" "--decorate"))
+ (magit-log:magit-log-mode "-n64" "--decorate"))

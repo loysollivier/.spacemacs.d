@@ -69,16 +69,11 @@ And insert tabs on indent + set tab width
   (spacemacs|diminish dtrt-indent-mode " ⓓ" " d")
 #+END_SRC
 * Magit
-Default signoff my commits
+Magit changed the variable/arguments handling.
+It is now stored in a file.
+TODO think of a way to use a list instead of a local file.
 #+BEGIN_SRC emacs-lisp
   (setq transient-values-file (concat dotspacemacs-directory "/transient/values.el"))
-#+END_SRC
-
-Change the behavior of the log to make it actually usable
-#+BEGIN_SRC emacs-lisp
-  (setq magit-log-arguments (remove "--graph" magit-log-arguments))
-  (setq magit-log-arguments (remove "-n256" magit-log-arguments))
-  (add-to-list 'magit-log-arguments '"-n64" )
 #+END_SRC
 
 Set line wrapping at 75 columns as suggested by the linux kernel
