@@ -1,7 +1,7 @@
 * Spacemacs config
-  Most of my config is kept in org.
-  Add a shortcut to editing this file.
-  Needs "my-user-config-file" and "my-mail-config-file" to be set in init.el
+Most of my config is kept in org.
+Add a shortcut to editing this file.
+Needs "my-user-config-file" and "my-mail-config-file" to be set in init.el
 #+BEGIN_SRC emacs-lisp
   (defun spacemacs/find-user-config-file ()
     "Edit the org configuration, in the current window."
@@ -19,8 +19,8 @@
     )
 #+END_SRC
 
-  Create a rgrep with defaults looking in "all" files recursively in current directory
-  TODO improve this by using C-u for overriding the files (i.e. look in all, including .git,...)
+Create a rgrep with defaults looking in "all" files recursively in current directory
+TODO improve this by using C-u for overriding the files (i.e. look in all, including .git,...)
 #+BEGIN_SRC emacs-lisp
   ;;(add-to-list 'grep-find-ignored-directories ".git")
   (defun my-rgrep-find ()
@@ -49,10 +49,10 @@ So that the prompt can change from block to line.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'evil-insert-state-entry-hook (lambda ()
                                             (when (not (display-graphic-p))
-                                               (send-string-to-terminal "\033[5 q"))))
+                                              (send-string-to-terminal "\033[5 q"))))
   (add-hook 'evil-normal-state-entry-hook (lambda ()
                                             (when (not (display-graphic-p))
-                                               (send-string-to-terminal "\033[0 q"))))
+                                              (send-string-to-terminal "\033[0 q"))))
 #+END_SRC
 
 Surround stuff:
@@ -104,8 +104,8 @@ Custom binding to copy the commit at point in oneline form
                            (magit-branch-or-commit-at-point))))
       (when oneline-commit
         (message "%s" (kill-new oneline-commit)))
+      )
     )
-   )
 
   (spacemacs/set-leader-keys
     "gy" 'magit-copy-commit-at-point
@@ -183,7 +183,7 @@ Terminal - Don't ask for confirmation to kill buffer
   (defun set-no-process-query-on-exit ()
     (let ((proc (get-buffer-process (current-buffer))))
       (when (processp proc)
-  	(set-process-query-on-exit-flag proc nil))))
+        (set-process-query-on-exit-flag proc nil))))
 
   (add-hook 'shell-mode-hook 'set-no-process-query-on-exit)
   (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
@@ -288,25 +288,25 @@ Greenish org tables are nicer :)
   (set-face-attribute 'org-table nil :foreground "#008787")
 #+end_src
 ** Expansion style
- See a downward pointing arrow instead of the usual
- (=...=) that org displays when there's stuff under the header.
+See a downward pointing arrow instead of the usual
+(=...=) that org displays when there's stuff under the header.
 
 #+BEGIN_SRC emacs-lisp
-   (setq org-ellipsis "⤵")
+  (setq org-ellipsis "⤵")
 #+END_SRC
 
 ** =TODO= states
- From [[https://orgmode.org/manual/Tracking-TODO-state-changes.html][ORG mode doc]], change the TODO states to:
- `TODO`, `WAIT`, `DONE`, `CANCELED`
- With some nifty timestamps.
+From [[https://orgmode.org/manual/Tracking-TODO-state-changes.html][ORG mode doc]], change the TODO states to:
+`TODO`, `WAIT`, `DONE`, `CANCELED`
+With some nifty timestamps.
 
- #+BEGIN_SRC emacs-lisp
- (setq org-todo-keywords
-   '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
- #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+#+END_SRC
 * Python
-  Set the Python interpreter to Python3
-  Anacomda-mode is not happy if Python2 is not installed
+Set the Python interpreter to Python3
+Anacomda-mode is not happy if Python2 is not installed
 #+BEGIN_SRC emacs-lisp
   (setq python-shell-interpreter "/usr/bin/python3")
 #+END_SRC
@@ -328,9 +328,9 @@ To toggle flycheck ON-OFF use =SPC t s= (OFF by default)
 When pressing "^" in dired move up one directory in same buffer
 #+BEGIN_SRC emacs-lisp
   (add-hook 'dired-mode-hook
-  	    (lambda ()
-  	      (define-key dired-mode-map (kbd "^")
-  		(lambda () (interactive)(find-alternate-file "..")))))
+            (lambda ()
+              (define-key dired-mode-map (kbd "^")
+                (lambda () (interactive)(find-alternate-file "..")))))
 #+END_SRC
 * gnus
 Apparently it's best to leave the primary select method nil
@@ -357,7 +357,7 @@ Fix when calling compilation on a project where it has not been set yet.
 Switch to the compilation buffer on compilation
 #+begin_src emacs-lisp
   (defun switch-to-comp (arg)
-      (switch-to-buffer-other-window "*compilation*"))
+    (switch-to-buffer-other-window "*compilation*"))
   (advice-add 'projectile-compile-project :after #'switch-to-comp)
 #+end_src
 * Emacs
@@ -382,15 +382,15 @@ Why this does not exist by default ?
 Maybe my flow is broken ?
 Kill current buffer and go to other window.
 #+begin_src emacs-lisp
-    (defun my-kill-this-buffer-go-to-other-window()
-      (interactive)
-      (kill-this-buffer)
-      (other-window 1)
+  (defun my-kill-this-buffer-go-to-other-window()
+    (interactive)
+    (kill-this-buffer)
+    (other-window 1)
     )
 
-    (spacemacs/set-leader-keys
-      "bk" 'my-kill-this-buffer-go-to-other-window
-      )
+  (spacemacs/set-leader-keys
+    "bk" 'my-kill-this-buffer-go-to-other-window
+    )
 
   (global-set-key (kbd "C-x O") 'my-kill-this-buffer-go-to-other-window)
 #+end_src
@@ -412,17 +412,17 @@ Reuse the =*ag search*= buffer instead of creating new ones.
 
 Search for string in default-directory (current-path)
 and switch to this buffer on result
-  #+begin_src emacs-lisp
-    (defun my-ag (string)
-      (interactive (list (ag/read-from-minibuffer "Search string")))
-      (message default-directory)
-      (ag string default-directory)
-      (switch-to-buffer-other-window "*ag search*"))
+#+begin_src emacs-lisp
+  (defun my-ag (string)
+    (interactive (list (ag/read-from-minibuffer "Search string")))
+    (message default-directory)
+    (ag string default-directory)
+    (switch-to-buffer-other-window "*ag search*"))
 
-    (spacemacs/set-leader-keys
-      "saG" 'my-ag
-      )
-  #+end_src
+  (spacemacs/set-leader-keys
+    "saG" 'my-ag
+    )
+#+end_src
 * lisp funcs
 Browse url at point with firefox
 #+begin_src emacs-lisp
