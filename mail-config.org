@@ -76,6 +76,43 @@ There's notmuch to say
   (require 'notmuch)
 #+end_src
 
+Refresh management
+#+begin_src emacs-lisp
+  (load (concat dotspacemacs-directory "Mail/gmi.el") t)
+  ;; gmi
+  (require 'gmi)
+  (setq gmi-verbose 'quiet)
+
+  ;; refresh management with gmi
+  (defvar notmuch-hello-buffer "*notmuch-hello*")
+  (defvar notmuch-refresh-timer nil)
+  ;; 10 minutes refresh period is fine. I do it manually anyway
+  (defvar notmuch-refresh-every 600)
+
+  (defun notmuch-fetch-done ()
+    (when (get-buffer notmuch-hello-buffer)
+      (with-current-buffer notmuch-hello-buffer
+        (notmuch-poll-and-refresh-this-buffer))))
+  (add-hook 'gmi-exit-hook #'notmuch-fetch-done)
+
+  (defun notmuch-run-gmi ()
+    (interactive)
+    (unless (gmi-get-proc)
+      (gmi))
+    (message "gmi sync done"))
+  (define-key notmuch-common-keymap "f" 'notmuch-run-gmi)
+
+  (defun notmuch-refresh-hook ()
+    (setq notmuch-refresh-timer (run-at-time 1 notmuch-refresh-every 'notmuch-run-gmi)))
+  (add-hook 'notmuch-hello-mode-hook #'notmuch-refresh-hook)
+
+  (defun notmuch-refresh-cancel ()
+    (when (string= (buffer-name (current-buffer)) notmuch-hello-buffer)
+      (cancel-timer notmuch-refresh-timer)))
+  (advice-add 'notmuch-bury-or-kill-this-buffer :before #'notmuch-refresh-cancel)
+
+#+end_src
+
 Disable evilification for notmuch
 #+begin_src emacs-lisp
   (dolist (mode notmuch-modes)
