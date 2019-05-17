@@ -249,3 +249,14 @@ Remove wash citation (collapse of citation lines) from insert text hook
   notmuch-show-insert-text/plain-hook))
 #+end_src
 
+Query unread mails at point
+#+begin_src emacs-lisp
+  (defun notmuch-unread-at-point ()
+    (interactive)
+    (let* ((button (get-char-property (point) 'button))
+           (query (plist-get (cdr button) :notmuch-search-terms))
+           (unread-query (concat query " and tag:unread")))
+  (notmuch-tree unread-query)))
+
+(define-key notmuch-common-keymap "u" 'notmuch-unread-at-point)
+#+end_src
