@@ -332,6 +332,21 @@ When pressing "^" in dired move up one directory in same buffer
               (define-key dired-mode-map (kbd "^")
                 (lambda () (interactive)(find-alternate-file "..")))))
 #+END_SRC
+
+Move a file/folder to the current dired buffer
+#+begin_src emacs-lisp
+  (defun my-move-to-last-dired (file)
+    (interactive "GMove file or directory:")
+    (let ((dired-buffer (seq-filter (lambda (buffer)
+                                      (with-current-buffer buffer
+                                        (string= major-mode "dired-mode")))
+                                    (buffer-list))))
+      (when dired-buffer
+        (with-current-buffer (car dired-buffer)
+          (rename-file file default-directory)))))
+  (add-hook 'dired-mode-hook (lambda ()
+                               (define-key dired-mode-map (kbd "C-f") #'my-move-to-last-dired)))
+#+end_src
 * gnus
 Apparently it's best to leave the primary select method nil
 And only use secondary select methods for news and stuff.
