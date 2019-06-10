@@ -336,6 +336,11 @@ To toggle flycheck ON-OFF use =SPC t s= (OFF by default)
   (setq flycheck-python-pylint-executable "/usr/bin/python3")
 #+end_src
 
+Disable importmagic by default
+#+begin_src emacs-lisp
+  (remove-hook 'python-mode-hook 'importmagic-mode)
+#+end_src
+
 * Dired
 When pressing "^" in dired move up one directory in same buffer
 #+BEGIN_SRC emacs-lisp
