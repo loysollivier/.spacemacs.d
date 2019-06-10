@@ -31,12 +31,6 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     (mu4e :variables
-     	   mu4e-installation-path "/usr/local/share/emacs/site-lisp/mu4e/"
-	   ;; Use the maildirs extension - needs to be set here
-	   mu4e-use-maildirs-extension t)
-     ;; spell-checking
-     ;; syntax-checking
      auto-completion
      better-defaults
      c-c++
