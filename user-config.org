@@ -373,6 +373,13 @@ And only use secondary select methods for news and stuff.
           (nntp "nntp.lore.kernel.org")
           ))
 #+END_SRC
+
+Load some read message - default behavior is to load only unread.
+Annoying in thread view.
+#+begin_src emacs-lisp
+  (setq gnus-fetch-old-headers 'some)
+#+end_src
+
 * projectile
 Started playing around with projectile.
 Flow for working on a new project is the following:
