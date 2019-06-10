@@ -43,6 +43,18 @@ Make the scratch buffer an org buffer, handy for scratching
   (setq dotspacemacs-scratch-mode 'org-mode)
 #+END_SRC
 
+When using =dotspacemacs-auto-resume-layouts= filter certain type of buffers
+#+begin_src emacs-lisp
+  (defun my-persp-filter-function (buffer)
+    "Filter for buffers that should not be saved/restored in persp."
+    (or
+     (with-current-buffer buffer
+       (memq major-mode '(magit-status-mode magit-log-mode magit-revision-mode magit-process-mode)))
+     (cl-search "epc con" (buffer-name buffer))))
+
+    (add-to-list 'persp-filter-save-buffers-functions 'my-persp-filter-function)
+#+end_src
+
 * evil
 Send escape sequence when using emacs/spacemacs not in graphic mode.
 So that the prompt can change from block to line.
