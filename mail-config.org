@@ -76,7 +76,7 @@ There's notmuch to say
   (require 'notmuch)
 #+end_src
 
-Refresh management
+** Refresh management
 #+begin_src emacs-lisp
   (load (concat dotspacemacs-directory "Mail/gmi.el") t)
   ;; gmi
@@ -92,15 +92,15 @@ Refresh management
   (defun notmuch-fetch-done ()
     (when (get-buffer notmuch-hello-buffer)
       (with-current-buffer notmuch-hello-buffer
-        (notmuch-poll-and-refresh-this-buffer))))
+        (notmuch-poll-and-refresh-this-buffer)))
+    (message "gmi sync done"))
   (add-hook 'gmi-exit-hook #'notmuch-fetch-done)
 
   (defun notmuch-run-gmi ()
     (interactive)
     (unless (gmi-get-proc)
-      (gmi))
-    (message "gmi sync done"))
-  (define-key notmuch-common-keymap "f" 'notmuch-run-gmi)
+      (gmi)))
+  (define-key notmuch-common-keymap "F" 'notmuch-run-gmi)
 
   (defun notmuch-refresh-hook ()
     (setq notmuch-refresh-timer (run-at-time 1 notmuch-refresh-every 'notmuch-run-gmi)))
@@ -110,15 +110,36 @@ Refresh management
     (when (string= (buffer-name (current-buffer)) notmuch-hello-buffer)
       (cancel-timer notmuch-refresh-timer)))
   (advice-add 'notmuch-bury-or-kill-this-buffer :before #'notmuch-refresh-cancel)
-
 #+end_src
 
-Disable evilification for notmuch
+Query unread mails at point
+#+begin_src emacs-lisp
+  (defun notmuch-unread-at-point ()
+    (interactive)
+    (let* ((button (get-char-property (point) 'button))
+           (query (plist-get (cdr button) :notmuch-search-terms))
+           (unread-query (concat query " and tag:unread")))
+      (notmuch-tree unread-query)))
+
+  (define-key notmuch-common-keymap "u" 'notmuch-unread-at-point)
+
+  (defun notmuch-flagged-at-point ()
+    (interactive)
+    (let* ((button (get-char-property (point) 'button))
+           (query (plist-get (cdr button) :notmuch-search-terms))
+           (flagged-query (concat query " and tag:flagged")))
+      (notmuch-tree flagged-query)))
+
+  (define-key notmuch-common-keymap "f" 'notmuch-flagged-at-point)
+#+end_src
+
+** Disable evilification for notmuch
 #+begin_src emacs-lisp
   (dolist (mode notmuch-modes)
     (evil-set-initial-state mode 'emacs))
 #+end_src
 
+** notmuch-hello
 Thanks [[https://github.com/JulienMasson/jm-config][JulienMasson]] for customizing your config for me :D
 Create a notmuch-hello page with a list of tags along with
 (unread/total) count of mails.
@@ -142,6 +163,7 @@ Create a notmuch-hello page with a list of tags along with
     '((t :inherit default))
     "Face when we don't have unread messages."
     :group 'notmuch-faces)
+
 
   (defun notmuch-custom-count-query (query)
     (with-temp-buffer
@@ -184,8 +206,11 @@ Create a notmuch-hello page with a list of tags along with
   (setq notmuch-hello-sections (list #'notmuch-custom-hello-section))
 
   (setq notmuch-custom-queries-alist '(("Inbox" . "tag:inbox")
-                                       ("Amlogic" . "tag:Mailing-lists/linux-kernel/Amlogic")
-                                       ("Needs Review" . "tag:1_needs-review")
+                                       ("Needs Review" . "tag:1_needs-review and not tag:trash")
+                                       ("Baylibre" . "tag:Mailing-lists/baylibre-upstreaming and not tag:trash")
+                                       ("Amlogic" . "tag:Mailing-lists/linux-kernel/Amlogic and not tag:trash")
+                                       ("risc-v" . "tag:Mailing-lists/linux-riscv and not tag:trash")
+                                       ("U-Boot" . "tag:Mailing-lists/U-Boot and not tag:trash")
                                        ("Replied" . "tag:replied")))
 #+end_src
 
@@ -194,18 +219,43 @@ Edit the FCC folder where notmuch will try to store the sent mails.
   (setq notmuch-fcc-dirs nil)
 #+end_src
 
+** Tagging keys
 Custom tagging keys
 #+begin_src emacs-lisp
-(setq notmuch-tagging-keys
-  `((,(kbd "a") notmuch-archive-tags "Archive")
-    (,(kbd "u") notmuch-show-mark-read-tags "Mark read")
-    (,(kbd "f") ("+flagged") "Flag")
-    (,(kbd "r") ("-1_needs-review") "Reviewed")
-    (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
-    (,(kbd "d") ("+trash" "-inbox") "Delete")))
+  (setq notmuch-tagging-keys
+        `((,(kbd "a") notmuch-archive-tags "Archive")
+          (,(kbd "u") notmuch-show-mark-read-tags "Mark read")
+          (,(kbd "f") ("+flagged") "Flag")
+          (,(kbd "r") ("-1_needs-review") "Reviewed")
+          (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
+          (,(kbd "d") ("+trash" "-inbox") "Delete")))
+
+  (setq my-notmuch-discard-tag '("-unread" "+trash"))
+
+  (defun notmuch-search-discard-thread (&optional undiscard beg end)
+    "Mark the currently selected thread or region as read and trashed.
+  This function advances to the next thread when finished."
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (when my-notmuch-discard-tag
+      (notmuch-search-tag
+       (notmuch-tag-change-list my-notmuch-discard-tag undiscard) beg end))
+    (when (eq beg end)
+      (notmuch-search-next-thread)))
+
+  (define-key notmuch-search-mode-map "A" 'notmuch-search-discard-thread)
+
+  (defun notmuch-tree-discard-thread (&optional undiscard)
+    "Mark the currently selected thread or region as read and trashed.
+    This function advances to the next thread when finished."
+    (interactive "P")
+    (when my-notmuch-discard-tag
+      (notmuch-tree-tag (notmuch-tag-change-list my-notmuch-discard-tag undiscard)))
+    (notmuch-tree-next-matching-message))
+
+  (define-key notmuch-tree-mode-map "d" 'notmuch-tree-discard-thread)
 #+end_src
 
-Modify fonts
+** Fonts
 #+begin_src emacs-lisp
   (face-spec-set
    'notmuch-tree-match-date-face
@@ -236,6 +286,7 @@ Modify fonts
    'face-defface-spec)
 #+end_src
 
+** Reading mails
 Fontify cited parts of the mail
 #+begin_src emacs-lisp
   (defun apply-mail-fontify-cited (msg depth)
@@ -249,14 +300,26 @@ Remove wash citation (collapse of citation lines) from insert text hook
   notmuch-show-insert-text/plain-hook))
 #+end_src
 
-Query unread mails at point
+Viewing diffs: [[https://github.com/JulienMasson/jm-config/blob/master/emacs/my-mail.el#L96][jm-config]]
 #+begin_src emacs-lisp
-  (defun notmuch-unread-at-point ()
+  (defun apply-minimal-diff-face-buffer ()
     (interactive)
-    (let* ((button (get-char-property (point) 'button))
-           (query (plist-get (cdr button) :notmuch-search-terms))
-           (unread-query (concat query " and tag:unread")))
-  (notmuch-tree unread-query)))
-
-(define-key notmuch-common-keymap "u" 'notmuch-unread-at-point)
+    (save-excursion
+      (goto-char (point-max))
+      (while (re-search-backward "^diff \-\-git" nil t))
+      (while (not (eobp))
+        (let* ((start (point))
+               (end (line-end-position))
+               (str (buffer-substring-no-properties start end))
+               (inhibit-read-only t))
+          (cond ((string-match "^\\(---\\|\\+\\+\\+\\)" str)
+                 (add-face-text-property start end 'diff-file-header))
+                ((string-match "^@@" str)
+                 (add-face-text-property start end 'diff-header))
+                ((string-match "^\\+" str)
+                 (add-face-text-property start end 'diff-added))
+                ((string-match "^\\-" str)
+                 (add-face-text-property start end 'diff-removed)))
+          (forward-line)))))
+  (add-hook 'notmuch-show-hook #'apply-minimal-diff-face-buffer)
 #+end_src
