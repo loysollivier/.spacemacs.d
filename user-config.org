@@ -479,3 +479,11 @@ or actually path and other stuff that people doesn't need to know about
 #+begin_src emacs-lisp
   (load (concat dotspacemacs-directory "secrets/secrets.el") t)
 #+end_src
+* Helm
+#+begin_src emacs-lisp
+  (customize-set-variable 'helm-ff-lynx-style-map t)
+  (customize-set-variable 'helm-imenu-lynx-style-map t)
+  (customize-set-variable 'helm-semantic-lynx-style-map t)
+  (customize-set-variable 'helm-occur-use-ioccur-style-keys t)
+  (customize-set-variable 'helm-grep-use-ioccur-style-keys t)
+#+end_src
