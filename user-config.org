@@ -1,3 +1,12 @@
+* Load path
+| Layer                 | Purpose         |
+|-----------------------+-----------------|
+| emacs-bash-completion | Bash completion |
+
+#+begin_src emacs-lisp
+(let ((default-directory  "~/.spacemacs.d/layers/"))
+  (normal-top-level-add-to-load-path '("emacs-bash-completion")))
+#+end_src
 * Spacemacs config
 Most of my config is kept in org.
 Add a shortcut to editing this file.
