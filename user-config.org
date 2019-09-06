@@ -496,3 +496,9 @@ or actually path and other stuff that people doesn't need to know about
   (customize-set-variable 'helm-occur-use-ioccur-style-keys t)
   (customize-set-variable 'helm-grep-use-ioccur-style-keys t)
 #+end_src
+* Pass
+#+begin_src emacs-lisp
+(use-package password-store
+  :init (spacemacs/set-leader-keys
+          "ay" 'password-store-copy))
+#+end_src

@@ -67,6 +67,7 @@ values."
    dotspacemacs-additional-packages '(
 				      ag
 				      dtrt-indent
+                                      password-store
 				      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
