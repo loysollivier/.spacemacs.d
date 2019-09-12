@@ -461,14 +461,19 @@ Reuse the =*ag search*= buffer instead of creating new ones.
 Search for string in default-directory (current-path)
 and switch to this buffer on result
 #+begin_src emacs-lisp
-  (defun my-ag (string)
+  (defun my-ag (str &optional dir)
     (interactive (list (ag/read-from-minibuffer "Search string")))
-    (message default-directory)
-    (ag string default-directory)
-    (switch-to-buffer-other-window "*ag search*"))
+    (let ((dir (or dir (or (projectile-project-root) default-directory))))
+      (message dir)
+      (ag str dir)
+      (switch-to-buffer-other-window "*ag search*")))
+  (defun my-ag-default-dir (str)
+    (interactive (list (ag/read-from-minibuffer "Search string")))
+    (my-ag str default-directory))
 
   (spacemacs/set-leader-keys
-    "saG" 'my-ag
+    "sag" 'my-ag
+    "saG" 'my-ag-default-dir
     )
 #+end_src
 * lisp funcs
