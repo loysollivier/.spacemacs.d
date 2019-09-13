@@ -58,7 +58,8 @@ When using =dotspacemacs-auto-resume-layouts= filter certain type of buffers
     "Filter for buffers that should not be saved/restored in persp."
     (or
      (with-current-buffer buffer
-       (memq major-mode '(magit-status-mode magit-log-mode magit-revision-mode magit-process-mode)))
+       (memq major-mode '(magit-status-mode magit-log-mode magit-revision-mode
+                          magit-process-mode magit-diff-mode)))
      (cl-search "epc con" (buffer-name buffer))))
 
     (add-to-list 'persp-filter-save-buffers-functions 'my-persp-filter-function)
