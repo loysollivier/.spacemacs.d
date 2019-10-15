@@ -92,10 +92,10 @@ And insert tabs on indent + set tab width
 #+END_SRC
 * Magit
 Magit changed the variable/arguments handling.
-It is now stored in a file.
-TODO think of a way to use a list instead of a local file.
+Create a custom var to set my options.
 #+BEGIN_SRC emacs-lisp
-  (setq transient-values-file (concat dotspacemacs-directory "/transient/values.el"))
+  (defvar transient-default-values '((magit-commit "--signoff")(magit-log:magit-log-mode "-n64" "--decorate")))
+  (setq transient-values transient-default-values)
 #+END_SRC
 
 Set line wrapping at 75 columns as suggested by the linux kernel
