@@ -85,6 +85,9 @@ Surround stuff:
 Set default indent to "linux"
 And insert tabs on indent + set tab width
 #+BEGIN_SRC emacs-lisp
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (c-set-style "linux")))
   (setq-default tab-width 8)
   (add-hook 'c-mode-common-hook 'dtrt-indent-mode)
   (add-hook 'python-mode-hook 'dtrt-indent-mode)
