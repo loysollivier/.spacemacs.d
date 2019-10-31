@@ -91,6 +91,7 @@ And insert tabs on indent + set tab width
   (setq-default tab-width 8)
   (add-hook 'c-mode-common-hook 'dtrt-indent-mode)
   (add-hook 'python-mode-hook 'dtrt-indent-mode)
+  (add-hook 'dts-mode-hook 'dtrt-indent-mode)
   (spacemacs|diminish dtrt-indent-mode " ⓓ" " d")
 #+END_SRC
 * Magit

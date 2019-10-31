@@ -67,6 +67,7 @@ values."
    dotspacemacs-additional-packages '(
 				      ag
 				      dtrt-indent
+                                      dts-mode
                                       password-store
 				      )
    ;; A list of packages that cannot be updated.
