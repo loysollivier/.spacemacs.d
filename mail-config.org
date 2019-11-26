@@ -131,6 +131,14 @@ Query unread mails at point
       (notmuch-tree flagged-query)))
 
   (define-key notmuch-common-keymap "f" 'notmuch-flagged-at-point)
+
+  (defun notmuch-search-at-point ()
+    (interactive)
+    (let* ((button (get-char-property (point) 'button))
+           (query (plist-get (cdr button) :notmuch-search-terms)))
+      (notmuch-search query)))
+
+  (define-key notmuch-common-keymap "s" 'notmuch-search-at-point)
 #+end_src
 
 ** Disable evilification for notmuch
@@ -287,6 +295,11 @@ Custom tagging keys
 #+end_src
 
 ** Reading mails
+Sort newest mail first
+#+begin_src emacs-lisp
+  (setq notmuch-search-oldest-first nil)
+#+end_src
+
 Fontify cited parts of the mail
 #+begin_src emacs-lisp
   (defun apply-mail-fontify-cited (msg depth)
