@@ -5,7 +5,7 @@
 
 #+begin_src emacs-lisp
 (let ((default-directory  "~/.spacemacs.d/layers/"))
-  (normal-top-level-add-to-load-path '("emacs-bash-completion")))
+  (normal-top-level-add-to-load-path '("emacs-bash-completion" "acscope")))
 #+end_src
 * Spacemacs config
 Most of my config is kept in org.
@@ -516,4 +516,9 @@ or actually path and other stuff that people doesn't need to know about
 (use-package password-store
   :init (spacemacs/set-leader-keys
           "ay" 'password-store-copy))
+#+end_src
+* acscope
+#+begin_src emacs-lisp
+(require 'acscope)
+(acscope-global-setup)
 #+end_src
