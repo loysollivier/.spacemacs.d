@@ -1,12 +1,20 @@
 * Load path
-| Layer                 | Purpose         |
-|-----------------------+-----------------|
-| emacs-bash-completion | Bash completion |
+| Layer                 | Purpose          |
+|-----------------------+------------------|
+| emacs-bash-completion | Bash completion  |
+| acscope               | cscope interface |
 
 #+begin_src emacs-lisp
 (let ((default-directory  "~/.spacemacs.d/layers/"))
-  (normal-top-level-add-to-load-path '("emacs-bash-completion")))
+  (normal-top-level-add-to-load-path '("emacs-bash-completion"))
+  (normal-top-level-add-to-load-path '("acscope")))
 #+end_src
+Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
+#+begin_src emacs-lisp
+(use-package acscope
+  :config (acscope-global-setup))
+#+end_src
+
 * Spacemacs config
 Most of my config is kept in org.
 Add a shortcut to editing this file.

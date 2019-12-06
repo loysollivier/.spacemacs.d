@@ -1,3 +1,6 @@
 [submodule "layers/emacs-bash-completion"]
 	path = layers/emacs-bash-completion
 	url = https://github.com/szermatt/emacs-bash-completion.git
+[submodule "layers/acscope"]
+	path = layers/acscope
+	url = https://github.com/JulienMasson/acscope.git
