@@ -19,7 +19,11 @@ Better bash completion
 Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
 #+begin_src emacs-lisp
 (use-package acscope
-  :config (acscope-global-setup))
+  :init
+  (evil-define-key 'normal acscope-mode-map (kbd "q") 'acscope-quit)
+  :config
+  (acscope-global-setup)
+)
 #+end_src
 
 * Spacemacs config
