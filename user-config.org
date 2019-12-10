@@ -9,6 +9,13 @@
   (normal-top-level-add-to-load-path '("emacs-bash-completion"))
   (normal-top-level-add-to-load-path '("acscope")))
 #+end_src
+
+Better bash completion
+#+BEGIN_SRC emacs-lisp
+(use-package bash-completion
+  :config (bash-completion-setup))
+#+END_SRC
+
 Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
 #+begin_src emacs-lisp
 (use-package acscope
@@ -265,13 +272,6 @@ Add the company-capf backend to shell mode
   (spacemacs|add-company-backends :backends company-capf :modes shell-mode)
 #+END_SRC
 
-Better bash completion
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.spacemacs.d/layers/emacs-bash-completion")
-  (require 'bash-completion)
-  (bash-completion-setup)
-#+END_SRC
-
 Use Emacs as the default editor for shell (module owned by magit)
 #+BEGIN_SRC emacs-lisp
   (require 'with-editor)
@@ -412,7 +412,7 @@ Started playing around with projectile.
 Flow for working on a new project is the following:
 - SPC p p - helm-projectile-switch-project
 - SPC p e - projectile-edit-dir-locals
-  - Set vars: projectile-project-compilation-cmd (and others projectile-porject-*)
+  - Set vars: projectile-project-compilation-cmd (and others projectile-project-*)
 - SPC p c - projectile-compile-project (might need a reload of =.dir-loacls.el= - use dired for this)
 
 Fix when calling compilation on a project where it has not been set yet.
@@ -466,14 +466,14 @@ Kill current buffer and go to other window.
   (setq deft-recursive t)
 #+end_src
 * ag
-#+begin_src emacs-lisp
-  (require 'ag)
-#+end_src
 Enable highlighting because it's nice
 Reuse the =*ag search*= buffer instead of creating new ones.
 #+begin_src emacs-lisp
+(use-package ag
+  :config
   (setq ag-highlight-search t)
   (setq ag-reuse-buffers t)
+)
 #+end_src
 
 Search for string in default-directory (current-path)
