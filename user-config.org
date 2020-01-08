@@ -117,7 +117,9 @@ And insert tabs on indent + set tab width
 Magit changed the variable/arguments handling.
 Create a custom var to set my options.
 #+BEGIN_SRC emacs-lisp
-  (defvar transient-default-values '((magit-commit "--signoff")(magit-log:magit-log-mode "-n64" "--decorate")))
+  (defvar transient-default-values '((magit-commit "--signoff" "--gpg-sign=0x32B3CAA03851CBA8")
+                                     (magit-log:magit-log-mode "-n64" "--decorate")
+                                     ))
   (setq transient-values transient-default-values)
 #+END_SRC
 
