@@ -283,6 +283,11 @@ Use Emacs as the default editor for shell (module owned by magit)
   (add-hook 'shell-mode-hook 'with-editor-export-editor)
 #+END_SRC
 
+Set shell initial state to emacs
+#+begin_src emacs-lisp
+  (evil-set-initial-state 'shell-mode 'emacs)
+  (global-set-key (kbd "C-x k") 'kill-this-buffer)
+#+end_src
 * Org mode
 Hard line wrap at 90 chars, looks good on most on my displays, half screen
 #+BEGIN_SRC emacs-lisp
