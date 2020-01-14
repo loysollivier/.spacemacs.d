@@ -19,10 +19,9 @@ Better bash completion
 Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
 #+begin_src emacs-lisp
 (use-package acscope
-  :init
-  (evil-define-key 'normal acscope-mode-map (kbd "q") 'acscope-quit)
   :config
   (acscope-global-setup)
+  (evil-set-initial-state 'acscope-buffer-mode 'emacs)
 )
 #+end_src
 
