@@ -436,6 +436,17 @@ Switch to the compilation buffer on compilation
     (switch-to-buffer-other-window "*compilation*"))
   (advice-add 'projectile-compile-project :after #'switch-to-comp)
 #+end_src
+
+Find file in project
+#+begin_src emacs-lisp
+  (defun my-projectile-find-file-in-current-directory ()
+    (interactive)
+    (projectile-find-file-in-directory default-directory))
+
+  (spacemacs/set-leader-keys
+    "fF" 'my-projectile-find-file-in-current-directory
+    )
+#+end_src
 * Emacs
 Launch server on startup if not already running
 #+begin_src emacs-lisp
