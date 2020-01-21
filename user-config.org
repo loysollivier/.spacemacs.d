@@ -300,11 +300,6 @@ Hard line wrap at 90 chars, looks good on most on my displays, half screen
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
 
-Disable native tabs in org. Don't like it.
-#+begin_src emacs-lisp
-  (setq org-src-tab-acts-natively nil)
-#+end_src
-
 If a org heading contains the tag =:newpage:= then automatically insert a clearpage when
 exporting to LaTeX/PDF
 - TODO improve it, make it mandatory for highest headings
