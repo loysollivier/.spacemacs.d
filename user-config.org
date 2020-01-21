@@ -470,6 +470,22 @@ Kill current buffer and go to other window.
 
   (global-set-key (kbd "C-x O") 'my-kill-this-buffer-go-to-other-window)
 #+end_src
+
+Toggle window split
+#+begin_src emacs-lisp
+(defun toggle-window-split ()
+  (interactive)
+  (let ((split (frame-parameter nil 'unsplittable)))
+    (set-frame-parameter nil 'unsplittable (not split))
+    (message "Window %sunsplittable."
+             (if split "no longer " "")
+             (buffer-name))
+    ))
+
+(spacemacs/set-leader-keys
+  "wT" 'toggle-window-split
+  )
+#+end_src
 * Deft
 #+begin_src emacs-lisp
   (setq deft-directory "~/Dropbox/Notes")
