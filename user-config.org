@@ -420,9 +420,11 @@ Flow for working on a new project is the following:
   - Set vars: projectile-project-compilation-cmd (and others projectile-project-*)
 - SPC p c - projectile-compile-project (might need a reload of =.dir-loacls.el= - use dired for this)
 
-Fix when calling compilation on a project where it has not been set yet.
+make the projectile compilation command safe to use.
 #+BEGIN_SRC emacs-lisp
-  (setq projectile-project-compilation-cmd "")
+  (put 'projectile-project-compilation-cmd 'safe-local-variable #'stringp)
+  (put 'dired-omit-files 'safe-local-variable #'stringp)
+  (put 'dired-omit-mode 'safe-local-variable #'booleanp)
 #+END_SRC
 
 Switch to the compilation buffer on compilation
