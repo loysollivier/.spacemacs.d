@@ -53,6 +53,7 @@ values."
      pdf
      python
      shell
+     spacemacs-purpose
      (spell-checking :variables spell-checking-enable-by-default nil)
      (syntax-checking :variables
 		      syntax-checking-enable-tooltips nil

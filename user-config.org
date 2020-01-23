@@ -84,7 +84,17 @@ When using =dotspacemacs-auto-resume-layouts= filter certain type of buffers
 
     (add-to-list 'persp-filter-save-buffers-functions 'my-persp-filter-function)
 #+end_src
-
+** window purpose
+#+begin_src emacs-lisp
+  (use-package window-purpose
+    :config
+    (dolist (mode '(ag-mode
+                    acscope-buffer-mode))
+      (add-to-list 'purpose-user-mode-purposes (cons mode 'status)))
+    (add-to-list 'purpose-user-regexp-purposes (cons "^magit.*$" 'status))
+    (purpose-compile-user-configuration)
+    )
+#+end_src
 * evil
 Send escape sequence when using emacs/spacemacs not in graphic mode.
 So that the prompt can change from block to line.
