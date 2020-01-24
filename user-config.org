@@ -365,6 +365,12 @@ With some nifty timestamps.
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
 #+END_SRC
+** org-capture
+#+begin_src emacs-lisp
+  (setq org-directory "~/Dropbox/Notes")
+  (setq org-default-notes-file (concat org-directory "/LOYS-inbox.org"))
+  (setq org-agenda-files (list (concat org-directory "/LOYS-TODO.org")))
+#+end_src
 * Python
 Set the Python interpreter to Python3
 Anacomda-mode is not happy if Python2 is not installed
