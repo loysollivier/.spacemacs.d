@@ -12,19 +12,19 @@
 
 Better bash completion
 #+BEGIN_SRC emacs-lisp
-(use-package bash-completion
-  :config (bash-completion-setup))
+;; (use-package bash-completion
+;;   :config (bash-completion-setup))
 #+END_SRC
 
 Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
 #+begin_src emacs-lisp
-  (use-package acscope
-    :config
-    (setq acscope-database-fast-symbol t)
-    (setq acscope-find-auto-update nil)
-    (acscope-global-setup)
-    (evil-set-initial-state 'acscope-buffer-mode 'emacs)
-  )
+  ;; (use-package acscope
+  ;;   :config
+  ;;   (setq acscope-database-fast-symbol t)
+  ;;   (setq acscope-find-auto-update nil)
+  ;;   (acscope-global-setup)
+  ;;   (evil-set-initial-state 'acscope-buffer-mode 'emacs)
+  ;; )
 #+end_src
 
 * Spacemacs config

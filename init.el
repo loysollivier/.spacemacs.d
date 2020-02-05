@@ -39,21 +39,21 @@ values."
      c-c++
      cmake
      cscope
-     csv
+     ;; csv
      ;; Deft is an Emacs mode for quickly browsing, filtering, and editing
      ;; directories of plain text notes.
-     deft
+     ;; deft
      emacs-lisp
      git
-     gnus
+     ;; gnus
      helm
-     html
-     javascript
-     latex
-     markdown
-     notmuch
-     org
-     pdf
+     ;; html
+     ;; javascript
+     ;; latex
+     ;; markdown
+     ;; notmuch
+     ;; org
+     ;; pdf
      python
      shell
      ;; additional spacemacs layers when using spacemacs-base
@@ -65,16 +65,16 @@ values."
      spacemacs-misc
      spacemacs-modeline
      spacemacs-navigation
-     spacemacs-org
+     ;; spacemacs-org
      spacemacs-project
      spacemacs-purpose
      spacemacs-visual
-     (spell-checking :variables spell-checking-enable-by-default nil)
-     (syntax-checking :variables
-		      syntax-checking-enable-tooltips nil
-		      syntax-checking-enable-by-default nil)
+     ;; (spell-checking :variables spell-checking-enable-by-default nil)
+     ;; (syntax-checking :variables
+     ;;                  syntax-checking-enable-tooltips nil
+     ;;                  syntax-checking-enable-by-default nil)
      version-control
-     yaml
+     ;; yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -90,7 +90,9 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    font-lock+
+                                    cpp-auto-include)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -357,8 +359,6 @@ you should place your code here."
   ;; User config encapsulated in org
   (setq my-user-config-file (concat dotspacemacs-directory "/user-config.org"))
   (org-babel-load-file my-user-config-file)
-  (setq my-mail-config-file (concat dotspacemacs-directory "/mail-config.org"))
-  (org-babel-load-file my-mail-config-file)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
