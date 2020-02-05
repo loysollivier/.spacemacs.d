@@ -141,6 +141,7 @@ Set line wrapping at 75 columns as suggested by the linux kernel
 
 Custom binding to log only from HEAD to first-tag
 #+BEGIN_SRC emacs-lisp
+  (use-package magit)
   (defun magit-log-from-head-to-last-tag (&optional args files)
     "Show log from `HEAD' to last Tag found."
     (interactive (magit-log-arguments))
