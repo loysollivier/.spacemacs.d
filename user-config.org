@@ -267,12 +267,31 @@ Disable whitespace mode, otherwise my eyes are bleeding
 #+BEGIN_SRC emacs-lisp
   (remove-hook 'diff-mode-hook 'whitespace-mode)
 #+END_SRC
-
 * Shell
-Set default shell to =shell=
+Override spacemacs shell to mine.
 #+BEGIN_SRC emacs-lisp
-  (setq shell-default-shell 'shell)
-  (setq shell-default-position 'bottom)
+;; my-super-list defined in secrets.el
+(defun my-shell (shell-name)
+  "Start a new shell for the given project"
+  (interactive (list (ido-completing-read "Shell: "
+                                          (mapcar #'car my-super-list)
+                                          nil t nil nil)))
+  (let* ((shell-buffer-name (generate-new-buffer-name
+                             (concat "*shell*<" shell-name ">")))
+         (commands (assoc-default shell-name my-super-list))
+         (input-commands (butlast commands 1))
+         (last-command (car (last commands)))
+         )
+    (with-current-buffer (shell shell-buffer-name)
+      (dolist (c input-commands)
+        (insert c)
+        (comint-send-input))
+      (insert last-command)
+      )))
+
+(spacemacs/set-leader-keys
+  "'" 'my-shell
+  )
 #+END_SRC
 
 Terminal - Don't ask for confirmation to kill buffer
@@ -603,7 +622,7 @@ Browse url at point with firefox
     )
 #+end_src
 * Secrets
-or actually path and other stuff that people doesn't need to know about
+or actually path and other stuff that people don't need to know about
 #+begin_src emacs-lisp
   (load (concat dotspacemacs-directory "secrets/secrets.el") t)
 #+end_src
