@@ -114,11 +114,38 @@ Surround stuff:
 * Coding style
 Set default indent to "linux"
 And insert tabs on indent + set tab width
+[[https://www.gnu.org/software/emacs/manual/html_node/ccmode/Sample-Init-File.html#Sample-Init-File][Adapted from doc]]
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (c-set-style "linux")))
-  (setq-default tab-width 8)
+  (add-hook 'occur-mode-hook (lambda () (setq truncate-lines t)))
+
+  (defconst loys-c-style
+    '((c-basic-offset  . 4)
+      (c-comment-only-line-offset . 0)
+      (c-hanging-braces-alist . ((brace-list-open)
+                                (brace-entry-open)
+                                (substatement-open after)
+                                (block-close . c-snug-do-while)
+                                (arglist-cont-nonempty)))
+      (c-cleanup-list . (brace-else-brace))
+      (c-offsets-alist . ((statement-block-intro . +)
+                          (knr-argdecl-intro     . 0)
+                          (substatement-open     . 0)
+                          (substatement-label    . 0)
+                          (label                 . 0)
+                          (statement-cont        . +))))
+    "Loys' C Programming Style")
+  (c-add-style "loys" loys-c-style)
+
+
+  (defun my-c-mode-common-hook ()
+    (c-set-style "loys")
+    (setq tab-width 4
+          ;; this will make sure spaces are used instead of tabs
+          indent-tabs-mode nil)
+    )
+
+  (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
   (add-hook 'c-mode-common-hook 'dtrt-indent-mode)
   (add-hook 'python-mode-hook 'dtrt-indent-mode)
   (add-hook 'dts-mode-hook 'dtrt-indent-mode)
