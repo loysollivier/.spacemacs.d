@@ -267,7 +267,7 @@ Disable whitespace mode, otherwise my eyes are bleeding
 #+BEGIN_SRC emacs-lisp
   (remove-hook 'diff-mode-hook 'whitespace-mode)
 #+END_SRC
- 
+
 * Shell
 Set default shell to =shell=
 #+BEGIN_SRC emacs-lisp
@@ -635,4 +635,68 @@ or actually path and other stuff that people doesn't need to know about
   (add-hook 'ibuffer-mode-hook
             (lambda ()
               (ibuffer-switch-to-saved-filter-groups "default")))
+#+end_src
+* Verilog
+#+begin_src emacs-lisp
+;; limit TAB power
+(defun bridle-tabs ()
+  (interactive)
+  ;; never insert '\t'
+  (setq indent-tabs-mode nil)
+  ;; tabulation is two spaces
+  (setq tab-width 2)
+  ;; tab key inserts tabulation
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  (local-set-key (kbd "<tab>") 'tab-to-tab-stop)
+  ;; indentation is done with C-tab
+  (local-set-key (kbd "<C-tab>") 'indent-for-tab-command))
+
+;; newline indents relative
+(defun ret-indent-relative ()
+  (interactive)
+  (newline)
+  (indent-relative t))
+
+;; line indentation is relative
+(defun remap-indent-line ()
+  (setq-local indent-line-function 'indent-relative))
+
+;; wrap all verilog customizations
+(defun verilog-mode-customizations ()
+  ;; set all indentations to two spaces
+  (setq verilog-indent-level 2)
+  (setq verilog-indent-level-module 2)
+  (setq verilog-indent-level-declaration 2)
+  (setq verilog-indent-level-behavioral 2)
+  (setq verilog-indent-level-directive 2)
+  (setq verilog-cexp-indent 2)
+  (setq verilog-case-indent 2)
+  ;; disable automatic indentation
+  (setq verilog-auto-indent-on-newline t)
+  (setq verilog-tab-always-indent nil)
+  (setq verilog-indent-begin-after-if nil)
+  (setq verilog-auto-newline nil)
+  (setq verilog-auto-end-comments nil)
+  (setq verilog-auto-lineup nil)
+  ;; change line indentation function
+  (add-hook 'verilog-mode-hook 'remap-indent-line)
+  ;; disable abbreviations
+  (abbrev-table-put verilog-mode-abbrev-table :enable-function (lambda () nil))
+  ;; configure indentation for some keys
+  (define-key verilog-mode-map (kbd ";") 'self-insert-command)
+  (define-key verilog-mode-map (kbd "RET") 'ret-indent-relative)
+  ;; change tab behavior
+  (add-hook 'verilog-mode-hook 'bridle-tabs))
+
+;; load verilog customizations
+(eval-after-load 'verilog-mode '(verilog-mode-customizations))
+
+;; wrap all smime customizations
+(defun smime-customizations ()
+  (setq smime-double-quotes-are-quotes nil)
+  (setq smime-syntax-table (smime-syntax-table-gen verilog-mode-syntax-table))
+  (abbrev-table-put smime-abbrev-table :enable-function (lambda () nil)))
+
+;; load smime customizations
+(eval-after-load 'smime '(smime-customizations))
 #+end_src
