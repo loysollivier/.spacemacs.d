@@ -496,6 +496,11 @@ Dired show size as "human-readable" style
 #+begin_src emacs-lisp
   (setq dired-listing-switches "-alh")
 #+end_src
+
+Delete files - don't move them to trash
+#+begin_src emacs-lisp
+  (setq delete-by-moving-to-trash nil)
+#+end_src
 * gnus
 Apparently it's best to leave the primary select method nil
 And only use secondary select methods for news and stuff.
