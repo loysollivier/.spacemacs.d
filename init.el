@@ -87,6 +87,7 @@ values."
                                       password-store
                                       gnu-elpa-keyring-update
                                       quelpa
+                                      tarmac-mode
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()

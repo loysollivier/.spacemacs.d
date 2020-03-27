@@ -748,3 +748,19 @@ or actually path and other stuff that people don't need to know about
 ;; load smime customizations
 (eval-after-load 'smime '(smime-customizations))
 #+end_src
+* Tarmac
+#+begin_src emacs-lisp
+;; configure quelpa
+(setq quelpa-checkout-melpa-p nil)
+(setq quelpa-update-melpa-p nil)
+(setq quelpa-self-upgrade-p nil)
+(require 'quelpa)
+;; load and update tarmac-mode
+(quelpa '(tarmac-mode
+          :fetcher git
+          :url "ssh://eu-gerrit-2.euhpc.arm.com:29418/emacs-rtl/tarmac-mode.git"
+          :files (:defaults "*.xpm" "db/*"))
+        :upgrade t)
+(require 'tarmac-mode)
+(evil-set-initial-state 'tarmac-mode 'normal)
+#+end_src
