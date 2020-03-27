@@ -270,6 +270,11 @@ Magit + gerrit
     '("g" "gerrit" magit-push-to-gerrit))
 #+end_src
 
+Magit really delete - don't move to trash
+#+begin_src emacs-lisp
+  (setq magit-delete-by-moving-to-trash nil)
+#+end_src
+
 * Diff-mode
 ** Whitespace-mode
 Disable whitespace mode, otherwise my eyes are bleeding
