@@ -337,7 +337,6 @@ Use Emacs as the default editor for shell (module owned by magit)
 Set shell initial state to emacs
 #+begin_src emacs-lisp
   (evil-set-initial-state 'shell-mode 'emacs)
-  (global-set-key (kbd "C-x k") 'kill-this-buffer)
 #+end_src
 
 Reduce bash completion timeout to 0.5sec
@@ -539,6 +538,7 @@ Kill current buffer and go to other window.
     )
 
   (global-set-key (kbd "C-x O") 'my-kill-this-buffer-go-to-other-window)
+  (global-set-key (kbd "C-x k") 'spacemacs/kill-this-buffer)
 #+end_src
 
 Toggle window split
