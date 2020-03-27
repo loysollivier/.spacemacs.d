@@ -621,3 +621,18 @@ or actually path and other stuff that people doesn't need to know about
   :init (spacemacs/set-leader-keys
           "ay" 'password-store-copy))
 #+end_src
+* Ibuffer
+#+begin_src emacs-lisp
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                ("dired" (mode . dired-mode))
+                ("python" (mode . python-mode))
+                ("Helm"  (name . "^\\*helm"))
+                ("Magit" (name . "^magit"))
+                ("emacs" (or
+                          (name . "^\\*.*\\*$")
+                          (name . "^\\*Messages\\*$")))))))
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-switch-to-saved-filter-groups "default")))
+#+end_src
