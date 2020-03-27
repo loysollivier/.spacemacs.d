@@ -12,8 +12,8 @@
 
 Better bash completion
 #+BEGIN_SRC emacs-lisp
-;; (use-package bash-completion
-;;   :config (bash-completion-setup))
+  (use-package bash-completion
+    :config (bash-completion-setup))
 #+END_SRC
 
 Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
@@ -84,6 +84,13 @@ When using =dotspacemacs-auto-resume-layouts= filter certain type of buffers
 
     (add-to-list 'persp-filter-save-buffers-functions 'my-persp-filter-function)
 #+end_src
+
+Devserver: do not kill emacs just close the frame
+#+BEGIN_SRC emacs-lisp
+  (spacemacs/set-leader-keys
+    "qq" 'delete-frame
+    )
+#+END_SRC
 ** window purpose
 #+begin_src emacs-lisp
   (use-package window-purpose
