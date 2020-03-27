@@ -613,6 +613,10 @@ Reuse the =*ag search*= buffer instead of creating new ones.
   :config
   (setq ag-highlight-search t)
   (setq ag-reuse-buffers t)
+  ;; This sometimes breaks the goto-file if set to t
+  (setq ag-group-matches nil)
+  ;; Follow symlinks
+  ;; (add-to-list 'ag-arguments "-f")
 )
 #+end_src
 
