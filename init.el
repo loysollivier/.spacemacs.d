@@ -53,7 +53,7 @@ values."
      ;; markdown
      ;; notmuch
      ;; org
-     ;; pdf
+     pdf
      python
      shell
      ;; additional spacemacs layers when using spacemacs-base
@@ -81,12 +81,13 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-				      ag
-				      dtrt-indent
+                                      ag
+                                      dtrt-indent
                                       dts-mode
                                       password-store
                                       gnu-elpa-keyring-update
-				      )
+                                      quelpa
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
