@@ -96,6 +96,17 @@ Disable which-key mode it's nice at first but super slowing down the GUI
 #+BEGIN_SRC emacs-lisp
   (which-key-mode -1)
 #+END_SRC
+
+Devserver: use SSH forwarding
+#+BEGIN_SRC emacs-lisp
+(defun my-refresh-ssh-auth-sock ()
+  "Reset the SSH_AUTH_SOCK environment variable"
+  (interactive)
+  (setenv "SSH_AUTH_SOCK" (shell-command-to-string "readlink -f -n ~/.ssh/ssh_auth_sock"))
+  (message (getenv "SSH_AUTH_SOCK")))
+
+(setenv "SSH_AUTH_SOCK" "/home/loyoll01/.ssh/ssh_auth_sock")
+#+END_SRC
 ** window purpose
 #+begin_src emacs-lisp
   (use-package window-purpose
