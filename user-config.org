@@ -479,6 +479,11 @@ Move a file/folder to the current dired buffer
   (add-hook 'dired-mode-hook (lambda ()
                                (define-key dired-mode-map (kbd "C-f") #'my-move-to-last-dired)))
 #+end_src
+
+Dired show size as "human-readable" style
+#+begin_src emacs-lisp
+  (setq dired-listing-switches "-alh")
+#+end_src
 * gnus
 Apparently it's best to leave the primary select method nil
 And only use secondary select methods for news and stuff.
