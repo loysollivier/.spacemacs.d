@@ -152,6 +152,9 @@ And insert tabs on indent + set tab width
   (spacemacs|diminish dtrt-indent-mode " ⓓ" " d")
 #+END_SRC
 * Magit
+#+begin_src emacs-lisp
+  (setenv "SSH_AUTH_SOCK" (substring (shell-command-to-string "gpgconf --list-dirs agent-ssh-socket") 0 -1))
+#+end_src
 Magit changed the variable/arguments handling.
 Create a custom var to set my options.
 #+BEGIN_SRC emacs-lisp
