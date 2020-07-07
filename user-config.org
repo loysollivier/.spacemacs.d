@@ -91,6 +91,11 @@ Devserver: do not kill emacs just close the frame
     "qq" 'delete-frame
     )
 #+END_SRC
+
+Disable which-key mode it's nice at first but super slowing down the GUI
+#+BEGIN_SRC emacs-lisp
+  (which-key-mode -1)
+#+END_SRC
 ** window purpose
 #+begin_src emacs-lisp
   (use-package window-purpose
