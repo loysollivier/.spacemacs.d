@@ -368,7 +368,7 @@ Reduce bash completion timeout to 0.5sec
 * Org mode
 Hard line wrap at 90 chars, looks good on most on my displays, half screen
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
+  ;; (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (add-hook 'org-mode-hook (lambda () (setq fill-column 90)))
 #+END_SRC
 
