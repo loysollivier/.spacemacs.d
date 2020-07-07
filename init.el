@@ -53,7 +53,7 @@ values."
      ;; markdown
      ;; notmuch
      ;; org
-     pdf
+     ;; pdf
      python
      shell
      ;; additional spacemacs layers when using spacemacs-base
