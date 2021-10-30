@@ -5,6 +5,13 @@
 | acscope               | cscope interface |
 
 #+begin_src emacs-lisp
+
+(use-package esup
+  :ensure t
+  ;; To use MELPA Stable use ":pin mepla-stable",
+  :pin melpa
+  :commands (esup))
+
 (let ((default-directory  "~/.spacemacs.d/layers/"))
   (normal-top-level-add-to-load-path '("emacs-bash-completion"))
   (normal-top-level-add-to-load-path '("acscope")))
@@ -18,13 +25,13 @@ Better bash completion
 
 Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
 #+begin_src emacs-lisp
-  ;; (use-package acscope
-  ;;   :config
-  ;;   (setq acscope-database-fast-symbol t)
-  ;;   (setq acscope-find-auto-update nil)
-  ;;   (acscope-global-setup)
-  ;;   (evil-set-initial-state 'acscope-buffer-mode 'emacs)
-  ;; )
+  (use-package acscope
+    :config
+    (setq acscope-database-fast-symbol t)
+    (setq acscope-find-auto-update nil)
+    (acscope-global-setup)
+    (evil-set-initial-state 'acscope-buffer-mode 'emacs)
+  )
 #+end_src
 
 * Spacemacs config
@@ -97,6 +104,11 @@ Disable which-key mode it's nice at first but super slowing down the GUI
   (which-key-mode -1)
 #+END_SRC
 
+Increase spacemacs large files size to 50MB
+#+BEGIN_SRC emacs-lisp
+  (setq dotspacemacs-large-file-size 50)
+#+END_SRC
+
 Devserver: use SSH forwarding
 #+BEGIN_SRC emacs-lisp
 (defun my-refresh-ssh-auth-sock ()
@@ -105,7 +117,8 @@ Devserver: use SSH forwarding
   (setenv "SSH_AUTH_SOCK" (shell-command-to-string "readlink -f -n ~/.ssh/ssh_auth_sock"))
   (message (getenv "SSH_AUTH_SOCK")))
 
-(setenv "SSH_AUTH_SOCK" "/home/loyoll01/.ssh/ssh_auth_sock")
+;; Call it right away to setup the env.
+(my-refresh-ssh-auth-sock)
 #+END_SRC
 ** window purpose
 #+begin_src emacs-lisp
@@ -118,7 +131,7 @@ Devserver: use SSH forwarding
     (purpose-compile-user-configuration)
     )
 #+end_src
-* evil
+* Evil
 Send escape sequence when using emacs/spacemacs not in graphic mode.
 So that the prompt can change from block to line.
 #+BEGIN_SRC emacs-lisp
@@ -129,6 +142,17 @@ So that the prompt can change from block to line.
                                             (when (not (display-graphic-p))
                                               (send-string-to-terminal "\033[0 q"))))
 #+END_SRC
+
+Override C-e from the evil normal-state-map
+#+begin_src emacs-lisp
+  (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
+  (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
+#+end_src
+
+Do not kill on visual paste
+#+begin_src emacs-lisp
+  (setq-default evil-kill-on-visual-paste nil)
+#+end_src
 
 Surround stuff:
 - [[https://github.com/syl20bnr/spacemacs/issues/7996][How do I surround a visual selection?]]
@@ -142,7 +166,7 @@ And insert tabs on indent + set tab width
   (add-hook 'occur-mode-hook (lambda () (setq truncate-lines t)))
 
   (defconst loys-c-style
-    '((c-basic-offset  . 4)
+    '((c-basic-offset  . 2)
       (c-comment-only-line-offset . 0)
       (c-hanging-braces-alist . ((brace-list-open)
                                 (brace-entry-open)
@@ -162,7 +186,7 @@ And insert tabs on indent + set tab width
 
   (defun my-c-mode-common-hook ()
     (c-set-style "loys")
-    (setq tab-width 4
+    (setq tab-width 2
           ;; this will make sure spaces are used instead of tabs
           indent-tabs-mode nil)
     )
@@ -178,18 +202,25 @@ And insert tabs on indent + set tab width
 #+begin_src emacs-lisp
   (setenv "SSH_AUTH_SOCK" (substring (shell-command-to-string "gpgconf --list-dirs agent-ssh-socket") 0 -1))
 #+end_src
-Magit changed the variable/arguments handling.
+
+Do not filter magit status buffers
+#+begin_src emacs-lisp
+  (setq spacemacs-useless-buffers-regexp '("magit-.*: .*"))
+#+end_src
+
+
+Magit changed the variables/arguments handling.
 Create a custom var to set my options.
 #+BEGIN_SRC emacs-lisp
-  (defvar transient-default-values '((magit-commit "--signoff" "--gpg-sign=0x32B3CAA03851CBA8")
+  (defvar transient-default-values '((magit-commit "--gpg-sign=0x32B3CAA03851CBA8")
                                      (magit-log:magit-log-mode "-n64" "--decorate")
                                      ))
   (setq transient-values transient-default-values)
 #+END_SRC
 
-Set line wrapping at 75 columns as suggested by the linux kernel
+Set line wrapping at 70 columns as suggested by the linux kernel
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 75)))
+  (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 70)))
 #+END_SRC
 
 Custom binding to log only from HEAD to first-tag
@@ -226,6 +257,7 @@ Custom binding to copy the commit at point in oneline form
 
 For big git repositories reduce the information fetched in magit to make magit faster
 #+begin_src emacs-lisp
+  ;; List of repos to blacklist this is appended in secrets file
   (defvar magit-blacklist-repo '()
     "list of blacklist repository")
 
@@ -235,7 +267,8 @@ For big git repositories reduce the information fetched in magit to make magit f
 
   (defvar magit-blacklist-status-sections-hook
     (seq-filter (lambda (elem)
-                  (not (member elem '(magit-insert-unpushed-to-pushremote
+                  (not (member elem '(magit-insert-untracked-files
+                                      magit-insert-unpushed-to-pushremote
                                       magit-insert-unpulled-from-pushremote
                                       magit-insert-unpulled-from-upstream))))
                 magit-status-sections-hook)
@@ -271,18 +304,23 @@ For big git repositories reduce the information fetched in magit to make magit f
   (advice-add 'magit-branch-or-commit-at-point :around #'magit-blacklist-branch-or-commit-at-point)
 #+end_src
 
-List of repos to blacklist this is appended in secrets file
-#+begin_src emacs-lisp
-  (add-to-list 'magit-blacklist-repo "")
-#+end_src
-
 Magit + gerrit
 #+begin_src emacs-lisp
   (defun magit-push-to-gerrit ()
     (interactive)
-    (magit-git-command "git push origin HEAD:refs/for/master"))
+    (let (target)
+      (if (string= (magit-get-current-branch) "master")
+          (setq target "master")
+        (if (string= (magit-get-current-branch) "main")
+            (setq target "main")
+          (setq target (completing-read "Target branch:" '("master" "main") ))
+          )
+        )
+      (magit-git-command (concat "git push origin HEAD:refs/for/" target))
+      )
+    )
 
-  (transient-append-suffix 'magit-push "e"
+  (transient-append-suffix 'magit-push "t"
     '("g" "gerrit" magit-push-to-gerrit))
 #+end_src
 
@@ -291,6 +329,10 @@ Magit really delete - don't move to trash
   (setq magit-delete-by-moving-to-trash nil)
 #+end_src
 
+git-gutter+ is slowing down magit-refresh a lot remove the all-buffers hook
+#+begin_src emacs-lisp
+  (remove-hook 'magit-pre-refresh-hook 'spacemacs//git-gutter+-refresh-in-all-buffers)
+#+end_src
 * Diff-mode
 ** Whitespace-mode
 Disable whitespace mode, otherwise my eyes are bleeding
@@ -394,6 +436,9 @@ Reduce bash completion timeout to 0.5sec
   (setq bash-completion-process-timeout 0.5)
 #+end_src
 * Org mode
+#+begin_src emacs-lisp
+  (use-package org)
+#+end_src
 Hard line wrap at 90 chars, looks good on most on my displays, half screen
 #+BEGIN_SRC emacs-lisp
   ;; (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
@@ -431,6 +476,11 @@ Disable it when in org-mode
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook (lambda () (purpose-mode -1)))
 #+end_src
+
+Tabs in soruce blocks
+#+begin_src emacs-lisp
+  (setq org-src-tab-acts-natively t)
+#+end_src
 ** org theme
 Greenish org tables are nicer :)
 #+begin_src emacs-lisp
@@ -460,23 +510,19 @@ With some nifty timestamps.
   (setq org-agenda-files (list (concat org-directory "/LOYS-TODO.org")))
 #+end_src
 * Python
-Set the Python interpreter to Python3
-Anacomda-mode is not happy if Python2 is not installed
-#+BEGIN_SRC emacs-lisp
-  (setq python-shell-interpreter "/usr/bin/python3")
-#+END_SRC
-
-Turn on fill-column-indicator by default for Python
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'python-mode-hook 'fci-mode)
-#+END_SRC
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook 'display-fill-column-indicator-mode)
+#+end_src
 
 Flycheck setup (needs syntax-checking layer)
 To toggle flycheck ON-OFF use =SPC t s= (OFF by default)
 #+begin_src emacs-lisp
-  (setq flycheck-python-pycompile-executable "/usr/bin/python3")
-  (setq flycheck-python-flake8-executable "/usr/bin/python3")
-  (setq flycheck-python-pylint-executable "/usr/bin/python3")
+  (pyvenv-workon "default")
+  (add-hook 'python-mode-hook 'flycheck-mode)
+  (setq lsp-pylsp-plugins-jedi-environment "/home/loyoll01/.virtualenvs/default/")
+  (setq lsp-pylsp-plugins-flake8-config "/home/loyoll01/.config/flake8")
+  (setq lsp-pylsp-plugins-pydocstyle-enabled nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
 #+end_src
 
 Disable importmagic by default
@@ -491,6 +537,16 @@ When pressing "^" in dired move up one directory in same buffer
             (lambda ()
               (define-key dired-mode-map (kbd "^")
                 (lambda () (interactive)(find-alternate-file "..")))))
+
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map (kbd "^")
+                (lambda () (interactive)(find-alternate-file "..")))))
+
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map
+                (kbd "w") 'dired-copy-filename-as-kill)))
 #+END_SRC
 
 Move a file/folder to the current dired buffer
@@ -568,8 +624,19 @@ Find file in project
 * Emacs
 Launch server on startup if not already running
 #+begin_src emacs-lisp
-  (load "server")
-  (unless (server-running-p) (server-start))
+;;  (load "server")
+;;  (unless (server-running-p) (server-start))
+#+end_src
+
+Optimize startup time by pre-compiling this user-config.org file on save
+#+begin_src emacs-lisp
+  (defun my/tangle-dotfiles ()
+    "If the current file is this file, the code blocks are tangled"
+    (when (equal (buffer-file-name) (expand-file-name "~/.spacemacs.d/user-config.org"))
+      (org-babel-tangle nil "~/.spacemacs.d/user-config.el")
+      (byte-compile-file "~/.spacemacs.d/user-config.el")))
+
+  (add-hook 'after-save-hook #'my/tangle-dotfiles)
 #+end_src
 
 Delete a word when using =C-<backspace>= instead of killing it (copy to kill-ring)
@@ -616,6 +683,19 @@ Toggle window split
   "wT" 'toggle-window-split
   )
 #+end_src
+
+Random Hex generation
+#+begin_src emacs-lisp
+(defun insert-random-hex (NUM)
+  "Insert NUM random hexadecimal digits.
+NUM default to 5.
+Call `universal-argument' before for different count.
+URL `http://ergoemacs.org/emacs/elisp_insert_random_number_string.html'
+Version 2017-08-03"
+  (interactive "P")
+  (let (($n (if (numberp NUM) (abs NUM) 5 )))
+    (insert (format  (concat "%0" (number-to-string $n) "x" ) (random (1- (expt 16 $n)))))))
+#+end_src
 * Deft
 #+begin_src emacs-lisp
   (setq deft-directory "~/Dropbox/Notes")
@@ -642,9 +722,7 @@ and switch to this buffer on result
   (defun my-ag (str &optional dir)
     (interactive (list (ag/read-from-minibuffer "Search string")))
     (let ((dir (or dir (or (projectile-project-root) default-directory))))
-      (message dir)
-      (ag str dir)
-      (switch-to-buffer-other-window "*ag search*")))
+      (ag str dir)))
   (defun my-ag-default-dir (str)
     (interactive (list (ag/read-from-minibuffer "Search string")))
     (my-ag str default-directory))
@@ -652,6 +730,32 @@ and switch to this buffer on result
   (spacemacs/set-leader-keys
     "sag" 'my-ag
     "saG" 'my-ag-default-dir
+    )
+#+end_src
+* rg
+#+begin_src emacs-lisp
+  (use-package rg)
+  (rg-define-search my-rg-project
+    "Run ripgrep in current project searching for thing at point in all files.
+    "
+    :files "everything"
+    :dir project
+    :flags ("--no-ignore" "--glob=!ucd_checker.json")
+    :confirm prefix)
+
+  (rg-define-search my-rg-default-dir
+    "Run ripgrep in default directory searching for thing at point in all files.
+    "
+    :files "everything"
+    :dir current
+    :flags ("--no-ignore" "--glob=!ucd_checker.json")
+    :confirm prefix)
+
+  (add-to-list 'rg-custom-type-aliases '("mds" . "*.sv *.svh .*.mds"))
+
+  (spacemacs/set-leader-keys
+    "sar" 'my-rg-project
+    "saR" 'my-rg-default-dir
     )
 #+end_src
 * lisp funcs
@@ -759,6 +863,8 @@ or actually path and other stuff that people don't need to know about
 (defun smime-customizations ()
   (setq smime-double-quotes-are-quotes nil)
   (setq smime-syntax-table (smime-syntax-table-gen verilog-mode-syntax-table))
+  (setq smime-render-dirs '("/arm/projectscratch/pd/pj02794_matterhorn/loyoll01/reg/mth/simulation/core_tb/Makalu_CoreTB_compile_link"))
+  (setq smime-module "/arm/projectscratch/pd/pj02794_matterhorn/loyoll01/reg/mth/misc/modules/midas")
   (abbrev-table-put smime-abbrev-table :enable-function (lambda () nil)))
 
 ;; load smime customizations
@@ -766,17 +872,18 @@ or actually path and other stuff that people don't need to know about
 #+end_src
 * Tarmac
 #+begin_src emacs-lisp
-;; configure quelpa
-(setq quelpa-checkout-melpa-p nil)
-(setq quelpa-update-melpa-p nil)
-(setq quelpa-self-upgrade-p nil)
-(require 'quelpa)
-;; load and update tarmac-mode
-(quelpa '(tarmac-mode
-          :fetcher git
-          :url "ssh://eu-gerrit-2.euhpc.arm.com:29418/emacs-rtl/tarmac-mode.git"
-          :files (:defaults "*.xpm" "db/*"))
-        :upgrade t)
-(require 'tarmac-mode)
-(evil-set-initial-state 'tarmac-mode 'normal)
+  (if (file-directory-p "/work/loyoll01/workdir-6/tarmac-mode")
+      (progn
+        (normal-top-level-add-to-load-path '("/work/loyoll01/workdir-6/tarmac-mode"))
+        (use-package tarmac-mode)
+        (evil-set-initial-state 'tarmac-mode 'normal)))
+#+end_src
+
+
+#+end_src
+* Midas
+#+begin_src emacs-lisp
+;; please keep the following synchronized with the midas version you are using
+(add-to-list 'load-path "/arm/warehouse/IPSolutions/midas/1.2/10/etc/SMIME")
+(require 'smime)
 #+end_src

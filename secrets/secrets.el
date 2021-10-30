@@ -1,25 +1,35 @@
 (setq my-super-list '(
-                      ("xtb" . ("cd $GH/shared"
-                                "source dotshrc"
-                                "module load $RVCT_MODULE"
-                                "cd $GH/logical/testbench/shared/tarmac/"
-                                "if [ ! -f verilog/teal_tarmac_capture.sv ];then ./build_tarmac.pl;fi"
-                                "cd $GH/logical/testbench/execution_tb/"
-                                "bs make run TESTNAME=check_cde_if"
-                               ))
-                      ("xtb-tests" . ("cd $GH/shared"
-                                      "source dotshrc"
-                                      "module load $RVCT_MODULE"
-                                      "cd $GH/logical/testbench/execution_tb/tests/"
-                                      "make clean"
-                                      "bs make check_cde_if"
-                                      ))
-                      ("dvs" . ("cd $GH/shared"
-                                "source dotshrc"
-                                "module load $RVCT_MODULE"
-                                "cd $GH/validation"
-                                "source dotrc"
-                                "blk_val teal_garda_cde_instruction --dfs console:wave=fsdb --bo tgt1:tarmac=True --build-clean"
-                                ))
+                      ("mth-reg" . ("cd /arm/projectscratch/pd/pj02794_matterhorn/loyoll01/reg/mth/simulation/core_tb/"
+                                    "source setupTB"
+                                    ""
+                                    ))
+                      ("mth-dev" . ("cd /arm/projectscratch/pd/pj02794_matterhorn/loyoll01/dev/mth/simulation/core_tb/"
+                                    "source setupTB"
+                                    ""
+                                    ))
+                      ("mth-junk" . ("cd /arm/projectscratch/pd/pj02794_matterhorn/loyoll01/junk/mth/simulation/core_tb/"
+                                    "source setupTB"
+                                    ""
+                                    ))
+                      ("mth-cov" . ("cd /arm/projectscratch/pd/pj02794_matterhorn/loyoll01/cov/mth/simulation/core_tb/"
+                                    "source setupTB"
+                                    ""
+                                    ))
+                      ("asterix-unit" . ("cd /arm/projectscratch/pd/pj02794_matterhorn/loyoll01/asterix"
+                                         "source dotshrc"
+                                         ""
+                                         ))
+                      ("asterix-tb" . ("cd /arm/projectscratch/pd/pj02794_matterhorn/loyoll01/asterix"
+                                       "cd example_tb"
+                                       "export ASTERIX_ROOT=\"..\""
+                                       "source dotshrc"
+                                       "blk_setup"
+                                       ""
+                                       ))
                       ))
 
+(setq magit-blacklist-repo '("/arm/projectscratch/pd/pj02794_matterhorn/loyoll01/workdir-6/mth/"
+                             "/arm/projectscratch/pd/pj02794_matterhorn/loyoll01/dev/mth/"
+                             "/arm/projectscratch/pd/pj02794_matterhorn/loyoll01/cov/mth/"
+                             "/arm/projectscratch/pd/pj02794_matterhorn/loyoll01/reg/mth/"))
+;; instead of cd: let default-directory

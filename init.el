@@ -54,6 +54,7 @@ values."
      ;; notmuch
      ;; org
      ;; pdf
+     lsp
      python
      shell
      ;; additional spacemacs layers when using spacemacs-base
@@ -74,20 +75,24 @@ values."
      ;;                  syntax-checking-enable-tooltips nil
      ;;                  syntax-checking-enable-by-default nil)
      version-control
-     ;; yaml
+     yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+				                              esup
                                       ag
+                                      browse-kill-ring
                                       dtrt-indent
                                       dts-mode
-                                      password-store
+                                      gerrit
                                       gnu-elpa-keyring-update
+                                      groovy-mode
+                                      password-store
                                       quelpa
-                                      tarmac-mode
+                                      rg
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -327,7 +332,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -338,7 +343,8 @@ values."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
-   ))
+   )
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -360,8 +366,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; User config encapsulated in org
+  ;; (org-babel-load-file my-user-config-file)
   (setq my-user-config-file (concat dotspacemacs-directory "/user-config.org"))
-  (org-babel-load-file my-user-config-file)
+  (load-file (concat dotspacemacs-directory "/user-config.elc"))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
