@@ -2,12 +2,10 @@
 | Layer                 | Purpose          |
 |-----------------------+------------------|
 | emacs-bash-completion | Bash completion  |
-| acscope               | cscope interface |
 
 #+begin_src emacs-lisp
 (let ((default-directory  "~/.spacemacs.d/layers/"))
-  (normal-top-level-add-to-load-path '("emacs-bash-completion"))
-  (normal-top-level-add-to-load-path '("acscope")))
+  (normal-top-level-add-to-load-path '("emacs-bash-completion")))
 #+end_src
 
 Better bash completion
@@ -15,17 +13,6 @@ Better bash completion
 (use-package bash-completion
   :config (bash-completion-setup))
 #+END_SRC
-
-Cscope interface: [[https://github.com/JulienMasson/acscope][acscope]]
-#+begin_src emacs-lisp
-  (use-package acscope
-    :config
-    (setq acscope-database-fast-symbol t)
-    (setq acscope-find-auto-update nil)
-    (acscope-global-setup)
-    (evil-set-initial-state 'acscope-buffer-mode 'emacs)
-  )
-#+end_src
 
 * Spacemacs config
 Most of my config is kept in org.
@@ -153,6 +140,7 @@ And insert tabs on indent + set tab width
 #+END_SRC
 * Magit
 #+begin_src emacs-lisp
+  (use-package magit)
   (setenv "SSH_AUTH_SOCK" (substring (shell-command-to-string "gpgconf --list-dirs agent-ssh-socket") 0 -1))
 #+end_src
 Magit changed the variable/arguments handling.
@@ -167,20 +155,6 @@ Create a custom var to set my options.
 Set line wrapping at 75 columns as suggested by the linux kernel
 #+BEGIN_SRC emacs-lisp
   (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 75)))
-#+END_SRC
-
-Custom binding to log only from HEAD to first-tag
-#+BEGIN_SRC emacs-lisp
-  (use-package magit)
-  (defun magit-log-from-head-to-last-tag (&optional args files)
-    "Show log from `HEAD' to last Tag found."
-    (interactive (magit-log-arguments))
-    (let ((last-tag (magit-git-string "describe" "--abbrev=0" "--tags")))
-      (when last-tag
-        (magit-log (list (format "%s..HEAD" last-tag)) args files))))
-
-  (magit-define-popup-action 'magit-log-popup
-    ?t "Log from HEAD to last Tag" 'magit-log-from-head-to-last-tag)
 #+END_SRC
 
 Custom binding to copy the commit at point in oneline form
@@ -201,58 +175,6 @@ Custom binding to copy the commit at point in oneline form
     )
 #+end_src
 
-For big git repositories reduce the information fetched in magit to make magit faster
-#+begin_src emacs-lisp
-  (defvar magit-blacklist-repo '()
-    "list of blacklist repository")
-
-  (defvar magit-blacklist-status-headers-hook
-    (remove 'magit-insert-tags-header magit-status-headers-hook)
-    "Remove tags header from status headers")
-
-  (defvar magit-blacklist-status-sections-hook
-    (seq-filter (lambda (elem)
-                  (not (member elem '(magit-insert-unpushed-to-pushremote
-                                      magit-insert-unpulled-from-pushremote
-                                      magit-insert-unpulled-from-upstream))))
-                magit-status-sections-hook)
-    "Remove unpushed/unpulled from status section")
-
-  (defun magit-blacklist-filter-hook (hook &rest args)
-    (nconc (if (-contains? magit-blacklist-repo (magit-toplevel))
-               (cond ((member 'magit-status-sections-hook hook)
-                      (cl-replace hook '(magit-blacklist-status-sections-hook)))
-                     ((member 'magit-status-headers-hook hook)
-                      (cl-replace hook '(magit-blacklist-status-headers-hook)))
-                     (t hook))
-             hook)
-           args))
-
-  (advice-add 'magit-run-section-hook :filter-args #'magit-blacklist-filter-hook)
-
-  (defun magit-blacklist-insert-revision-headers (old-fn &rest args)
-    (if (-contains? magit-blacklist-repo (magit-toplevel))
-        (let ((magit-revision-insert-related-refs nil))
-          (apply old-fn args))
-      (apply old-fn args)))
-
-  (advice-add 'magit-insert-revision-headers :around #'magit-blacklist-insert-revision-headers)
-
-  (defun magit-blacklist-branch-or-commit-at-point (old-fn &rest args)
-    (if (-contains? magit-blacklist-repo (magit-toplevel))
-        (let ((magit-buffer-refname (magit-section-case
-                                      (commit (oref it value)))))
-          (apply old-fn args))
-      (apply old-fn args)))
-
-  (advice-add 'magit-branch-or-commit-at-point :around #'magit-blacklist-branch-or-commit-at-point)
-#+end_src
-
-List of repos to blacklist this is appended in secrets file
-#+begin_src emacs-lisp
-  (add-to-list 'magit-blacklist-repo "")
-#+end_src
-
 Magit + gerrit
 #+begin_src emacs-lisp
   (defun magit-push-to-gerrit ()
@@ -271,30 +193,16 @@ Disable whitespace mode, otherwise my eyes are bleeding
   (remove-hook 'diff-mode-hook 'whitespace-mode)
 #+END_SRC
 * Shell
-Override spacemacs shell to mine.
+Configure shell opening.
 #+BEGIN_SRC emacs-lisp
-;; my-super-list defined in secrets.el
-(defun my-shell (shell-name)
-  "Start a new shell for the given project"
-  (interactive (list (ido-completing-read "Shell: "
-                                          (mapcar #'car my-super-list)
-                                          nil t nil nil)))
-  (let* ((shell-buffer-name (generate-new-buffer-name
-                             (concat "*shell*<" shell-name ">")))
-         (commands (assoc-default shell-name my-super-list))
-         (input-commands (butlast commands 1))
-         (last-command (car (last commands)))
-         )
-    (with-current-buffer (shell shell-buffer-name)
-      (dolist (c input-commands)
-        (insert c)
-        (comint-send-input))
-      (insert last-command)
-      )))
+  (defun my-shell (&optional name)
+   "Start a new shell from the current directory"
+   (interactive)
+   (shell (generate-new-buffer-name (or name "*shell*"))))
 
-(spacemacs/set-leader-keys
-  "'" 'my-shell
-  )
+  (spacemacs/set-leader-keys
+    "'" 'my-shell
+    )
 #+END_SRC
 
 Terminal - Don't ask for confirmation to kill buffer
@@ -423,7 +331,7 @@ With some nifty timestamps.
 
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+        '((sequence "TODO(t)" "DEVELOP(p)" "IN-REVIEW(r)" "|" "DONE(d!)" "ON-HOLD(h)")))
 #+END_SRC
 ** org-capture
 #+begin_src emacs-lisp
@@ -662,68 +570,4 @@ or actually path and other stuff that people don't need to know about
   (add-hook 'ibuffer-mode-hook
             (lambda ()
               (ibuffer-switch-to-saved-filter-groups "default")))
-#+end_src
-* Verilog
-#+begin_src emacs-lisp
-;; limit TAB power
-(defun bridle-tabs ()
-  (interactive)
-  ;; never insert '\t'
-  (setq indent-tabs-mode nil)
-  ;; tabulation is two spaces
-  (setq tab-width 2)
-  ;; tab key inserts tabulation
-  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
-  (local-set-key (kbd "<tab>") 'tab-to-tab-stop)
-  ;; indentation is done with C-tab
-  (local-set-key (kbd "<C-tab>") 'indent-for-tab-command))
-
-;; newline indents relative
-(defun ret-indent-relative ()
-  (interactive)
-  (newline)
-  (indent-relative t))
-
-;; line indentation is relative
-(defun remap-indent-line ()
-  (setq-local indent-line-function 'indent-relative))
-
-;; wrap all verilog customizations
-(defun verilog-mode-customizations ()
-  ;; set all indentations to two spaces
-  (setq verilog-indent-level 2)
-  (setq verilog-indent-level-module 2)
-  (setq verilog-indent-level-declaration 2)
-  (setq verilog-indent-level-behavioral 2)
-  (setq verilog-indent-level-directive 2)
-  (setq verilog-cexp-indent 2)
-  (setq verilog-case-indent 2)
-  ;; disable automatic indentation
-  (setq verilog-auto-indent-on-newline t)
-  (setq verilog-tab-always-indent nil)
-  (setq verilog-indent-begin-after-if nil)
-  (setq verilog-auto-newline nil)
-  (setq verilog-auto-end-comments nil)
-  (setq verilog-auto-lineup nil)
-  ;; change line indentation function
-  (add-hook 'verilog-mode-hook 'remap-indent-line)
-  ;; disable abbreviations
-  (abbrev-table-put verilog-mode-abbrev-table :enable-function (lambda () nil))
-  ;; configure indentation for some keys
-  (define-key verilog-mode-map (kbd ";") 'self-insert-command)
-  (define-key verilog-mode-map (kbd "RET") 'ret-indent-relative)
-  ;; change tab behavior
-  (add-hook 'verilog-mode-hook 'bridle-tabs))
-
-;; load verilog customizations
-(eval-after-load 'verilog-mode '(verilog-mode-customizations))
-
-;; wrap all smime customizations
-(defun smime-customizations ()
-  (setq smime-double-quotes-are-quotes nil)
-  (setq smime-syntax-table (smime-syntax-table-gen verilog-mode-syntax-table))
-  (abbrev-table-put smime-abbrev-table :enable-function (lambda () nil)))
-
-;; load smime customizations
-(eval-after-load 'smime '(smime-customizations))
 #+end_src

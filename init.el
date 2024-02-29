@@ -83,9 +83,10 @@ values."
    dotspacemacs-additional-packages '(
 				      ag
 				      dtrt-indent
-                                      dts-mode
-                                      password-store
-                                      gnu-elpa-keyring-update
+              dts-mode
+              password-store
+              gnu-elpa-keyring-update
+              org-kanban
 				      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -175,7 +176,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Hack"
-                               :size 10.0
+                               :size 15.0
                                :weight normal
                                :width normal
                                :powerline-scale 1.0)
